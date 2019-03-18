@@ -4,6 +4,6 @@ from django.urls import path
 # Verlof uren urls
 
 urlpatterns = [
-    # Admin urls (cool)
+    # Admin urls (stoel)
     path('admin/', admin.site.urls),
 ]
