@@ -1,3 +1,4 @@
-# verlof_uren
+# Verlof Uren
 Verlof uren registratie Yellenge.
-Project ter leering ende vermaeck.
+
+Project on django te leren.
