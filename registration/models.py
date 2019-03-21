@@ -1,8 +1,9 @@
+from django.contrib.auth.models import User
 from django.db import models
 
 
 class Entitlement(models.Model):
-    user = models.CharField(max_length=50)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
     year = models.IntegerField()
     leave_hours = models.IntegerField()
 
@@ -11,7 +12,7 @@ class Entitlement(models.Model):
 
 
 class LeaveRegistration(models.Model):
-    user = models.CharField(max_length=50)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
     from_date = models.DateField()
     end_date = models.DateField()
     amount_of_hours = models.IntegerField()
