@@ -1,4 +1,4 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 
 {% load static %}
@@ -9,14 +9,40 @@
             Untitled Document
         {% endblock title %}
     </title>
-    <link href="{% static '' %}" rel="stylesheet" type="text/css">
+    <link href="{% static 'main.css' %}" rel="stylesheet" type="text/css">
     <link rel="shortcut icon" href="{% static '' %}"/>
+    <script src="https://code.jquery.com/jquery-3.1.1.min.js" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/semantic-ui@2.4.2/dist/semantic.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/semantic-ui@2.4.2/dist/semantic.min.js"></script>
+    <style type="text/css">
+        body {
+            background-color: #FFFFFF;
+        }
+
+        .ui.menu .item img.logo {
+            margin-right: 1.5em;
+        }
+
+        .main.container {
+            margin-top: 7em;
+        }
+
+        {#.wireframe {#}
+        {#    margin-top: 2em;#}
+        {#/}#}
+
+        .ui.footer.segment {
+            margin: 5em 0 0;
+        }
+    </style>
 </head>
 <body>
-<div id="wrapper">
-    <header id="header">
-        <div id="Yellenge logo no gradient"><img src="{% static '' %}" alt=""/>
-            <span style="float: right;">
+<div class="ui fixed inverted menu">
+    <div class="ui container">
+        <a href="#" class="header item">
+            <img class="logo" src="{% static 'Yellenge_logo_no_gradient.svg' %}" alt=""/>
+        </a>
+        <span style="float: right;">
             {% if user.is_authenticated %}
                 Hello {{ user.username }} <a href="{% url 'logout' %}?next=/">Log out</a>
                 <a href="{% url 'password_change' %}?next=/">Change password</a>
@@ -24,16 +50,17 @@
                 Not signed in <a href="{% url 'login' %}?next=/">Log in</a>
             {% endif %}
         </span>
-        </div>
-        <div id="topbanner"><img src="{% static '' %}" width="800" height="200" alt=""/></div>
-    </header>
-    <section id="main">
-        {% block content %}
-            <h1>Welcome!</h1>
-            <p>This is the site template</p>
-        {% endblock content %}
-    </section>
-    <footer id="footer">Copyright &copy; 2019 Owello</footer>
+    </div>
+</div>
+
+<div class="ui main text container">
+    {% block content %}{% endblock %}
+</div>
+
+<div class="ui inverted vertical footer segment">
+    <div class="ui center aligned container">
+        &nbsp;
+    </div>
 </div>
 </body>
 </html>
