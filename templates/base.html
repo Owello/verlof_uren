@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="en">
+
+{% load static %}
+<head>
+    <meta charset="utf-8">
+    <title>
+        {% block title %}
+            Untitled Document
+        {% endblock title %}
+    </title>
+    <link href="{% static '' %}" rel="stylesheet" type="text/css">
+    <link rel="shortcut icon" href="{% static '' %}"/>
+</head>
+<body>
+<div id="wrapper">
+    <header id="header">
+        <div id="Yellenge logo no gradient"><img src="{% static '' %}" alt=""/>
+            <span style="float: right;">
+            {% if user.is_authenticated %}
+                Hello {{ user.username }} <a href="{% url 'logout' %}?next=/">Log out</a>
+                <a href="{% url 'password_change' %}?next=/">Change password</a>
+            {% else %}
+                Not signed in <a href="{% url 'login' %}?next=/">Log in</a>
+            {% endif %}
+        </span>
+        </div>
+        <div id="topbanner"><img src="{% static '' %}" width="800" height="200" alt=""/></div>
+    </header>
+    <section id="main">
+        {% block content %}
+            <h1>Welcome!</h1>
+            <p>This is the site template</p>
+        {% endblock content %}
+    </section>
+    <footer id="footer">Copyright &copy; 2019 Owello</footer>
+</div>
+</body>
+</html>
