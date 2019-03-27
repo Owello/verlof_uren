@@ -4,11 +4,15 @@
 
 {% block title %}Login{% endblock %}
 
+{% block menu %} {% endblock %}
+
 {% block content %}
+    <h1><P align='center'>De Yellenge Verlof Uren Website :D</P></h1>
+
     <div class="ui middle aligned center aligned grid">
         <div class="column">
-            <h2 class="ui teal image header">
-                <img class="image" src="{% static 'Yellenge_logo_no_gradient.svg' %}">
+             <h2 class="ui teal image header">
+                <img class="image" src="{% static 'Yellenge_logo_no_gradient.svg' %}" alt="">
                 <div class="content">
                     Log-in to your account
                 </div>
@@ -36,6 +40,7 @@
                 <div class="ui error message"></div>
 
             </form>
+
 
         </div>
     </div>

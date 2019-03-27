@@ -42,18 +42,18 @@
         <a href="#" class="header item">
             <img class="logo" src="{% static 'Yellenge_logo_no_gradient.svg' %}" alt=""/>
         </a>
-        <span style="float: right;">
-            {% if user.is_authenticated %}
-                Hello {{ user.username }} <a href="{% url 'logout' %}?next=/">Log out</a>
-                <a href="{% url 'password_change' %}?next=/">Change password</a>
-            {% else %}
-                Not signed in <a href="{% url 'login' %}?next=/">Log in</a>
-            {% endif %}
-        </span>
     </div>
 </div>
 
 <div class="ui main text container">
+    {% block menu %}
+    <div class="ui four item menu">
+            <a class="item">item 1</a>
+            <a class="item">item 2</a>
+            <a class="item">item 3</a>
+            <a class="active item" href="{% url 'logout' %}?next=/">Log out</a>
+        </div>
+     {% endblock %}
     {% block content %}{% endblock %}
 </div>
 

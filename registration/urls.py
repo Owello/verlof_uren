@@ -1,6 +1,8 @@
 from django.conf.urls import url
 from . import views
+from .views import EntitlementList
 
 urlpatterns = [
-    url(r'^$', views.index, name='index')
+    url(r'^entitlementlist/', EntitlementList.as_view(), name='entitlement_list'),
+    url(r'^$', views.Index.as_view(), name='index')
 ]
