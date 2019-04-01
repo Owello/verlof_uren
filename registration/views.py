@@ -1,8 +1,11 @@
 from django.urls import reverse_lazy
-from django.views.generic import TemplateView
+from django.views.generic import TemplateView, CreateView, UpdateView
+from django.http import HttpResponseRedirect
+
 from django.contrib.auth.mixins import LoginRequiredMixin
 
 from .models import Entitlement, LeaveRegistration
+from .forms import LeaveRegistrationForm
 
 
 class Index(LoginRequiredMixin, TemplateView):
@@ -22,3 +25,26 @@ class EntitlementList(LoginRequiredMixin, TemplateView):
         context['used_leave_hours'] = 0
         context['remainder_leave_hours'] = 0
         return context
+
+
+class LeaveRegistrationCreate(LoginRequiredMixin, CreateView):
+    template_name = 'registration/leaveregistration_create.html'
+    model = LeaveRegistration
+    form_class = LeaveRegistrationForm
+    success_url = reverse_lazy('entitlement_list')
+
+    def form_valid(self, form):
+        self.object = form.save(commit=False)
+        self.object.user = self.request.user
+        self.object.save()
+        return HttpResponseRedirect(self.get_success_url())
+
+
+class LeaveRegistrationUpdate(LoginRequiredMixin, UpdateView):
+    template_name = 'registration/leaveregistration_update.html'
+    model = LeaveRegistration
+    form_class = LeaveRegistrationForm
+    success_url = reverse_lazy('entitlement_list')
+
+    def get_queryset(self):
+        return super(LeaveRegistrationUpdate, self).get_queryset().filter(user=self.request.user)

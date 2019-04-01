@@ -1,11 +1,11 @@
 from django.contrib import admin
-from django.conf.urls import url
+from django.urls import path
 from django.urls import include
 
 # Verlof uren urls
 
 urlpatterns = [
-    url(r'^admin/', admin.site.urls),
-    url(r'^', include('django.contrib.auth.urls')),
-    url(r'^', include('registration.urls')),
+    path('admin/', admin.site.urls),
+    path('', include('django.contrib.auth.urls')),
+    path('', include('registration.urls')),
 ]

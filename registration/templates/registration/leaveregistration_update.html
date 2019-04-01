@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+
+{% block title %}Verlofuren Wijzigen{% endblock %}
+
+{% block content %}
+    <h1 align='center'>Wijzig verlofuren</h1>
+
+    <form class="ui form" method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+         <button class="ui button" type="submit">Wijzig</button>
+    </form>
+
+{% endblock %}
