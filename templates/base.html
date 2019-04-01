@@ -42,6 +42,13 @@
         <a href="#" class="header item">
             <img class="logo" src="{% static 'Yellenge_logo_no_gradient.svg' %}" alt=""/>
         </a>
+        <div class="header item">
+            {% if user.is_authenticated %}
+                <p> Welkom {{ request.user.username }} </p>
+            {% else %}
+                <p> Niet ingelogd </p>
+            {% endif %}
+        </div>
     </div>
 </div>
 
