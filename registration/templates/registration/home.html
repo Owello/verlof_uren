@@ -6,9 +6,9 @@
 
 {% block content %}
 
-    <h1 align='center'>De Yellenge Verlof Uren Website :D</h1>
+    <h1 class="ui center aligned header">De Yellenge Verlof Uren Website :D</h1>
 
-    <a class="massive fluid ui green basic button" href="{% url 'entitlement_list' %}?next=/"><i class ="icon user"></i>
+    <a class="massive fluid ui green basic button" href="{% url 'entitlement-detail' year=2019 %}"><i class ="icon user"></i>
             Verlofoverzicht
         </a>
 <a class="massive fluid ui red  basic button" href="{% url 'logout' %}?next=/"><i class ="icon user"></i>
