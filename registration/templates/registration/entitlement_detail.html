@@ -1,6 +1,13 @@
 {% extends 'base.html' %}
+{% load substract %}
 
 {% block title %}Verlofuren{% endblock %}
+
+{% block js %}
+    <script type="application/javascript">
+        $('.ui.dropdown').dropdown();
+    </script>
+{% endblock %}
 
 {% block content %}
     <h1 class="ui center aligned header">Verlofuren</h1>
@@ -8,13 +15,16 @@
 
     {#    example of a dropdown Menu.#}
 
-    <label>
-        <select class="ui dropdown">
-            <option value="">Jaar</option>
-            <option value="1">2019</option>
-            <option value="0">2018</option>
-        </select>
-    </label>
+    <div class="ui selection dropdown">
+        <input type="hidden" name="jaar">
+        <i class="dropdown icon"></i>
+        <div class="default text">Jaar</div>
+        <div class="menu">
+            {% for entitlement in all_entitlements %}
+                <a class="item" href="{% url 'entitlement-detail' year=entitlement.year %}"> {{ entitlement.year }} </a>
+            {% endfor %}
+        </div>
+    </div>
 
 
     {#    example of a table for the entitlement#}
@@ -34,11 +44,11 @@
         </tr>
         <tr>
             <td>Gebruikte Uren</td>
-            <td>{{ used_leave_hours }}</td>
+            <td>{{ entitlement.used_leave_hours }}</td>
         </tr>
         <tr>
             <td>Verlofuren over</td>
-            <td>{{ remainder_leave_hours }}</td>
+            <td>{{ entitlement.leave_hours|substract:entitlement.used_leave_hours }}</td>
         </tr>
         </tbody>
     </table>
@@ -64,7 +74,8 @@
                     <a class="ui button" href="{% url 'leave_registration_update' pk=leave.id %}">Aanpassen</a>
                 </td>
                 <td>
-                    <a class="ui negative button" href="{% url 'leave_registration_delete' pk=leave.id %}">Verwijderen</a>
+                    <a class="ui negative button"
+                       href="{% url 'leave_registration_delete' pk=leave.id %}">Verwijderen</a>
                 </td>
             </tr>
         {% endfor %}

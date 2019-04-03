@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+{% load substract %}
+
+{% block title %}Overzicht Verlofuren{% endblock %}
+
+
+{% block content %}
+    <h1 class="ui center aligned header">Overzicht Verlofuren</h1>
+
+    <table class="ui celled table">
+        <thead>
+        <tr>
+            <th>Naam</th>
+            <th>Jaar</th>
+            <th>Verlofuren</th>
+            <th>Gebruikte uren</th>
+            <th>Verlofuren over</th>
+        </thead>
+        <tbody>
+        {% for entitlement in all_entitlements %}
+            <tr>
+                <td>{{ entitlement.user }} </td>
+                <td>{{ entitlement.year }}</td>
+                <td>{{ entitlement.leave_hours }}</td>
+                <td>{{ entitlement.used_leave_hours }}</td>
+                <td>{{ entitlement.leave_hours|substract:entitlement.used_leave_hours }}</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}

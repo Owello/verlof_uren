@@ -8,8 +8,14 @@ class EntitlementAdmin(admin.ModelAdmin):
 
 
 class LeaveRegistrationAdmin(admin.ModelAdmin):
-    list_display = ('user', 'from_date', 'end_date', 'amount_of_hours')
-    list_filter = ('user',)
+    list_display = ('_user', 'from_date', 'end_date', 'amount_of_hours')
+    list_filter = ('entitlement__user',)
+    list_select_related = ('entitlement', 'entitlement__user')
+
+    def _user(self, obj):
+        return obj.entitlement.user
+
+    _user.short_description = 'User'
 
 
 admin.site.register(Entitlement, EntitlementAdmin)

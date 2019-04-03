@@ -8,10 +8,16 @@
 
     <h1 class="ui center aligned header">De Yellenge Verlof Uren Website :D</h1>
 
-    <a class="massive fluid ui green basic button" href="{% url 'entitlement-detail' year=2019 %}"><i class ="icon user"></i>
-            Verlofoverzicht
+    {% if not default_entitlement  %}
+        <h3 class="ui center aligned header">Er zijn nog geen gegevens beschikbaar.</h3>
+        <h3 class="ui center aligned header">Vraag Ronnie of Joost om deze in te vullen.</h3>
+    {% else %}
+        <a class="massive fluid ui green basic button" href="{% url 'entitlement-detail' year=default_entitlement.year %}"><i
+            class="icon user"></i>
+        Verlofoverzicht
         </a>
-<a class="massive fluid ui red  basic button" href="{% url 'logout' %}?next=/"><i class ="icon user"></i>
-            Log out
-        </a>
+    {% endif %}
+    <a class="massive fluid ui red  basic button" href="{% url 'logout' %}?next=/"><i class="icon user"></i>
+        Log out
+    </a>
 {% endblock %}

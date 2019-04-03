@@ -1,6 +1,8 @@
+from django.db.models import Sum
+from django.db.models.functions import Coalesce
 from django.shortcuts import get_object_or_404
 from django.urls import reverse_lazy
-from django.views.generic import TemplateView, DetailView, CreateView, UpdateView, DeleteView
+from django.views.generic import TemplateView, DetailView, CreateView, UpdateView, DeleteView, ListView
 from django.http import HttpResponseRedirect
 from django.contrib.auth.mixins import LoginRequiredMixin
 
@@ -18,19 +20,17 @@ class EntitlementDetail(LoginRequiredMixin, DetailView):
     login_url = reverse_lazy('login')
 
     def get_object(self, queryset=None):
-        return get_object_or_404(Entitlement, user=self.request.user, year=self.kwargs['year'])
+        return get_object_or_404(self.get_queryset(), user=self.request.user, year=self.kwargs['year'])
+
+    def get_queryset(self):
+        return super(EntitlementDetail, self).get_queryset().annotate(
+            used_leave_hours=Coalesce(Sum('leaveregistration__amount_of_hours'), 0))
 
     def get_context_data(self, **kwargs):
         context = super(EntitlementDetail, self).get_context_data(**kwargs)
-        leave_registrations = LeaveRegistration.objects.filter(user=self.request.user, from_date__year=self.object.year)
+        context['all_entitlements'] = Entitlement.objects.filter(user=self.request.user)
+        leave_registrations = LeaveRegistration.objects.filter(entitlement=self.object)
         context['all_leave_registrations'] = leave_registrations
-
-        hours_total = 0
-        for leave_registration in leave_registrations:
-            hours_total += leave_registration.amount_of_hours
-        context['used_leave_hours'] = hours_total
-
-        context['remainder_leave_hours'] = self.object.leave_hours - hours_total
         return context
 
 
@@ -39,9 +39,20 @@ class LeaveRegistrationCreate(LoginRequiredMixin, CreateView):
     model = LeaveRegistration
     form_class = LeaveRegistrationForm
 
+    def get_form_kwargs(self, *args, **kwargs):
+        kwargs = super(LeaveRegistrationCreate, self).get_form_kwargs()
+        kwargs['user'] = self.request.user
+        all_entitlements = Entitlement.objects.filter(user=self.request.user)
+        year = []
+        for entitlement in all_entitlements:
+            year.append(entitlement.year)
+        kwargs['years'] = year
+        return kwargs
+
     def form_valid(self, form):
         self.object = form.save(commit=False)
         self.object.user = self.request.user
+        self.object.entitlement = Entitlement.objects.get(user=self.object.user, year=self.object.from_date.year)
         self.object.save()
         return HttpResponseRedirect(self.get_success_url())
 
@@ -54,8 +65,18 @@ class LeaveRegistrationUpdate(LoginRequiredMixin, UpdateView):
     model = LeaveRegistration
     form_class = LeaveRegistrationForm
 
+    def get_form_kwargs(self, *args, **kwargs):
+        kwargs = super(LeaveRegistrationUpdate, self).get_form_kwargs()
+        kwargs['user'] = self.request.user
+        all_entitlements = Entitlement.objects.filter(user=self.request.user)
+        year = []
+        for entitlement in all_entitlements:
+            year.append(entitlement.year)
+        kwargs['years'] = year
+        return kwargs
+
     def get_queryset(self):
-        return super(LeaveRegistrationUpdate, self).get_queryset().filter(user=self.request.user)
+        return super(LeaveRegistrationUpdate, self).get_queryset()
 
     def get_success_url(self):
         return reverse_lazy('entitlement-detail', kwargs={'year': self.object.from_date.year})
@@ -65,7 +86,25 @@ class LeaveRegistrationDelete(LoginRequiredMixin, DeleteView):
     model = LeaveRegistration
 
     def get_queryset(self):
-        return super(LeaveRegistrationDelete, self).get_queryset().filter(user=self.request.user)
+        return super(LeaveRegistrationDelete, self).get_queryset()
 
     def get_success_url(self):
         return reverse_lazy('entitlement-detail', kwargs={'year': self.object.from_date.year})
+
+
+class NoEntitlement(LoginRequiredMixin, TemplateView):
+    template_name = 'registration/home.html'
+    login_url = reverse_lazy('login')
+
+
+class EntitlementList(LoginRequiredMixin, ListView):
+    template_name = 'registration/entitlement_list.html'
+    model = Entitlement
+    login_url = reverse_lazy('login')
+
+    def get_context_data(self, **kwargs):
+        context = super(EntitlementList, self).get_context_data(**kwargs)
+        entitlements = Entitlement.objects.filter(user=self.request.user).annotate(
+            used_leave_hours=Coalesce(Sum('leaveregistration__amount_of_hours'), 0))
+        context['all_entitlements'] = entitlements
+        return context
