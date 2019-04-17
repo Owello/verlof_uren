@@ -76,7 +76,7 @@ class LeaveRegistrationUpdate(LoginRequiredMixin, UpdateView):
         return kwargs
 
     def get_queryset(self):
-        return super(LeaveRegistrationUpdate, self).get_queryset()
+        return super(LeaveRegistrationUpdate, self).get_queryset().filter(entitlement__user=self.request.user)
 
     def get_success_url(self):
         return reverse_lazy('entitlement-detail', kwargs={'year': self.object.from_date.year})
@@ -86,15 +86,10 @@ class LeaveRegistrationDelete(LoginRequiredMixin, DeleteView):
     model = LeaveRegistration
 
     def get_queryset(self):
-        return super(LeaveRegistrationDelete, self).get_queryset()
+        return super(LeaveRegistrationDelete, self).get_queryset().filter(entitlement__user=self.request.user)
 
     def get_success_url(self):
         return reverse_lazy('entitlement-detail', kwargs={'year': self.object.from_date.year})
-
-
-class NoEntitlement(LoginRequiredMixin, TemplateView):
-    template_name = 'registration/home.html'
-    login_url = reverse_lazy('login')
 
 
 class EntitlementList(LoginRequiredMixin, ListView):
