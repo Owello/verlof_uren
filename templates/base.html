@@ -56,8 +56,9 @@
     {% block menu %}
         {% if user.is_authenticated and default_entitlement %}
             {% if debug %}
-            <div class="ui one item menu">
+            <div class="ui two item menu">
                 <a class="item" href=/admin>Admin</a>
+                <a class="item" href="{% url 'adminuser-list' %}">UserAdmin</a>
             </div>
             {% endif %}
             <div class="ui five item menu">
@@ -66,7 +67,7 @@
                         class="home icon"></i>Overzicht</a>
                 <a class="item" href="{% url 'entitlement-list' %}"><i class="calendar alternate outline icon"></i>Overzicht
                     alle jaren</a>
-                <a class="item" href="{% url 'leave_registration_create' %}"><i class="pencil icon"></i>Invoeren</a>
+                <a class="item" href="{% url 'leave_registration_create' %}"><i class="pencil icon"></i>Invoeren opgenomen verlofuren</a>
                 <a class="active item" href="{% url 'logout' %}?next=/"><i class="sign-out icon"></i>Log out</a>
 
             </div>

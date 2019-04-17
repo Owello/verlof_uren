@@ -1,0 +1,53 @@
+{% extends 'base.html' %}
+{% load substract %}
+
+{% block title %}Overzicht gebruikers{% endblock %}
+
+
+{% block content %}
+    <h1 class="ui center aligned header">
+        Overzicht gebruikers
+    </h1>
+     <a class=" ui positive button" href="{% url 'index' %}">Voeg nieuwe gebruiker toe</a>
+
+
+    <table class="ui celled table">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Gebruikersnaam</th>
+                <th>Voornaam</th>
+                <th>Achternaam</th>
+                <th>E-mail adres</th>
+                <th></th>
+                <th></th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for user in users %}
+            <tr>
+                <td>{{ user.id}} </td>
+                <td>{{ user.username }}</td>
+                <td>{{ user.first_name }}</td>
+                <td>{{ user.last_name }}</td>
+                <td>{{ user.email }}</td>
+                <td>
+{#                    <a class="ui button" href="{% url 'user_update' pk=user.id %}">Aanpassen</a>#}
+                    <a class="ui positive button" href="{% url 'index' %}">Aanpassen</a>
+                </td>
+                <td>
+{#                    <a class="ui negative button"#}
+{#                       href="{% url 'user_delete' pk=user.id %}">Verwijderen</a>#}
+                    <a class="ui negative button" href="{% url 'index' %}">Verwijderen</a>
+
+                </td>
+                <td>
+{#                    <a class="ui button" href=""{% url 'leave_registration_list' %}">Overzicht Verlofuren</a>#}
+                    <a class="ui blue button" href="{% url 'adminuser_registration' pk=user.id %}">Overzicht verlofuren</a>
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}
