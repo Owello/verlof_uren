@@ -1,3 +1,4 @@
+from django.contrib.auth.models import User
 from django.forms import ModelForm, DateInput, forms
 
 from .models import LeaveRegistration
@@ -34,3 +35,13 @@ class LeaveRegistrationForm(ModelForm):
         if from_year not in self.years:
             raise forms.ValidationError("Dit jaar is (nog) niet beschikbaar")
         return self.cleaned_data
+
+
+class UserForm(ModelForm):
+    required_css_class = 'required'
+
+    class Meta:
+        model = User
+        fields = [
+            'username', 'password', 'first_name', 'last_name', 'email', 'is_active'
+        ]

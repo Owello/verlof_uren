@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+
+{% block title %}Gebruiker aanmaken{% endblock %}
+
+{% block content %}
+    <h1 class="ui center aligned header">Maak gebruiker aan</h1>
+
+    <form class="ui form" method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+         <button class="ui button" type="submit">Voeg toe</button>
+    </form>
+
+{% endblock %}

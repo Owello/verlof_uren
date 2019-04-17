@@ -8,7 +8,7 @@
     <h1 class="ui center aligned header">
         Overzicht gebruikers
     </h1>
-     <a class=" ui positive button" href="{% url 'index' %}">Voeg nieuwe gebruiker toe</a>
+     <a class=" ui positive button" href="{% url 'user-create' %}">Voeg nieuwe gebruiker toe</a>
 
 
     <table class="ui celled table">
@@ -19,6 +19,7 @@
                 <th>Voornaam</th>
                 <th>Achternaam</th>
                 <th>E-mail adres</th>
+                <th>Laatste Inlog</th>
                 <th></th>
                 <th></th>
                 <th></th>
@@ -32,6 +33,7 @@
                 <td>{{ user.first_name }}</td>
                 <td>{{ user.last_name }}</td>
                 <td>{{ user.email }}</td>
+                <td>{{ user.last_login|date:"SHORT_DATE_FORMAT" }}</td>
                 <td>
 {#                    <a class="ui button" href="{% url 'user_update' pk=user.id %}">Aanpassen</a>#}
                     <a class="ui positive button" href="{% url 'index' %}">Aanpassen</a>

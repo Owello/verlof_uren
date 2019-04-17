@@ -7,7 +7,7 @@ from django.views.generic import TemplateView, DetailView, CreateView, UpdateVie
 from django.http import HttpResponseRedirect
 
 from .models import Entitlement, LeaveRegistration
-from .forms import LeaveRegistrationForm
+from .forms import LeaveRegistrationForm, UserForm
 
 from django.contrib.auth.mixins import PermissionRequiredMixin
 
@@ -128,3 +128,20 @@ class UserList(PermissionRequiredMixin, ListView):
         return context
 
 
+class UserCreate(PermissionRequiredMixin, CreateView):
+    permission_required = 'auth.add_user'
+    template_name = 'registration/user_create.html'
+    model = User
+    form_class = UserForm
+
+
+    def form_valid(self, form):
+        self.object = form.save(commit=False)
+        password = self.object.password
+        self.object.set_password(password)
+        self.object.save()
+        return HttpResponseRedirect(self.get_success_url())
+
+
+    def get_success_url(self):
+        return reverse_lazy('user-list')
