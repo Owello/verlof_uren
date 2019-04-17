@@ -55,7 +55,7 @@
 <div class="ui main text container">
     {% block menu %}
         {% if user.is_authenticated and default_entitlement %}
-            {% if debug %}
+            {% if perms.registration.add_entitlement %}
             <div class="ui two item menu">
                 <a class="item" href=/admin>Admin</a>
                 <a class="item" href="{% url 'adminuser-list' %}">UserAdmin</a>

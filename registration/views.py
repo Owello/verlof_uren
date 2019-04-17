@@ -5,27 +5,21 @@ from django.shortcuts import get_object_or_404
 from django.urls import reverse_lazy
 from django.views.generic import TemplateView, DetailView, CreateView, UpdateView, DeleteView, ListView
 from django.http import HttpResponseRedirect
-from django.contrib.auth.mixins import LoginRequiredMixin
 
 from .models import Entitlement, LeaveRegistration
 from .forms import LeaveRegistrationForm
 
-
 from django.contrib.auth.mixins import PermissionRequiredMixin
 
 
-class PermissionView(PermissionRequiredMixin, TemplateView):
-    permission_required = 'registration.can_view'
-    permission_required = 'registration.can_add'
-    permission_required = 'registration.can_delete'
-
-
-class Index(LoginRequiredMixin, TemplateView):
+class Index(PermissionRequiredMixin, TemplateView):
+    permission_required = 'registration.view_entitlement'
     template_name = 'registration/home.html'
     login_url = reverse_lazy('login')
 
 
-class EntitlementDetail(LoginRequiredMixin, DetailView):
+class EntitlementDetail(PermissionRequiredMixin, DetailView):
+    permission_required = 'registration.view_entitlement'
     model = Entitlement
     login_url = reverse_lazy('login')
 
@@ -44,7 +38,8 @@ class EntitlementDetail(LoginRequiredMixin, DetailView):
         return context
 
 
-class LeaveRegistrationCreate(LoginRequiredMixin, CreateView):
+class LeaveRegistrationCreate(PermissionRequiredMixin, CreateView):
+    permission_required = 'registration.add_leaveregistration'
     template_name = 'registration/leaveregistration_create.html'
     model = LeaveRegistration
     form_class = LeaveRegistrationForm
@@ -70,7 +65,8 @@ class LeaveRegistrationCreate(LoginRequiredMixin, CreateView):
         return reverse_lazy('entitlement-detail', kwargs={'year': self.object.from_date.year})
 
 
-class LeaveRegistrationUpdate(LoginRequiredMixin, UpdateView):
+class LeaveRegistrationUpdate(PermissionRequiredMixin, UpdateView):
+    permission_required = 'registration.change_leaveregistration'
     template_name = 'registration/leaveregistration_update.html'
     model = LeaveRegistration
     form_class = LeaveRegistrationForm
@@ -92,7 +88,8 @@ class LeaveRegistrationUpdate(LoginRequiredMixin, UpdateView):
         return reverse_lazy('entitlement-detail', kwargs={'year': self.object.from_date.year})
 
 
-class LeaveRegistrationDelete(LoginRequiredMixin, DeleteView):
+class LeaveRegistrationDelete(PermissionRequiredMixin, DeleteView):
+    permission_required = 'registration.delete_leaveregistration'
     model = LeaveRegistration
 
     def get_queryset(self):
@@ -102,7 +99,8 @@ class LeaveRegistrationDelete(LoginRequiredMixin, DeleteView):
         return reverse_lazy('entitlement-detail', kwargs={'year': self.object.from_date.year})
 
 
-class EntitlementList(LoginRequiredMixin, ListView):
+class EntitlementList(PermissionRequiredMixin, ListView):
+    permission_required = 'registration.view_entitlement'
     template_name = 'registration/entitlement_list.html'
     model = Entitlement
     login_url = reverse_lazy('login')
@@ -115,7 +113,8 @@ class EntitlementList(LoginRequiredMixin, ListView):
         return context
 
 
-class AdminUserList(LoginRequiredMixin, ListView):
+class AdminUserList(PermissionRequiredMixin, ListView):
+    permission_required = 'auth.view_user'
     template_name = 'registration/admin_user_list.html'
     model = User
     login_url = reverse_lazy('login')
