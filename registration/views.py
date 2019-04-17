@@ -113,17 +113,17 @@ class EntitlementList(PermissionRequiredMixin, ListView):
         return context
 
 
-class AdminUserList(PermissionRequiredMixin, ListView):
+class UserList(PermissionRequiredMixin, ListView):
     permission_required = 'auth.view_user'
-    template_name = 'registration/admin_user_list.html'
+    template_name = 'registration/user_list.html'
     model = User
     login_url = reverse_lazy('login')
 
     def get_queryset(self):
-        return super(AdminUserList, self).get_queryset()
+        return super(UserList, self).get_queryset()
 
     def get_context_data(self, **kwargs):
-        context = super(AdminUserList, self).get_context_data(**kwargs)
+        context = super(UserList, self).get_context_data(**kwargs)
         context['users'] = User.objects.all()
         return context
 
