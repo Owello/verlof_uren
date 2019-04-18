@@ -1,5 +1,5 @@
 from django.contrib.auth.models import User
-from django.forms import ModelForm, DateInput, forms
+from django.forms import ModelForm, DateInput, forms, CheckboxSelectMultiple
 
 from .models import LeaveRegistration
 
@@ -43,5 +43,8 @@ class UserForm(ModelForm):
     class Meta:
         model = User
         fields = [
-            'username', 'first_name', 'last_name', 'email', 'is_active'
+            'username', 'first_name', 'last_name', 'email', 'is_active', 'groups'
         ]
+        widgets = {
+            'groups': CheckboxSelectMultiple()
+        }
