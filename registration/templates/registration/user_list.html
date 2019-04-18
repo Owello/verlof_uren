@@ -35,8 +35,7 @@
                 <td>{{ user.email }}</td>
                 <td>{{ user.last_login|date:"SHORT_DATE_FORMAT" }}</td>
                 <td>
-{#                    <a class="ui button" href="{% url 'user_update' pk=user.id %}">Aanpassen</a>#}
-                    <a class="ui positive button" href="{% url 'index' %}">Aanpassen</a>
+                    <a class="ui positive button" href="{% url 'user-update' pk=user.id %}">Aanpassen</a>
                 </td>
                 <td>
 {#                    <a class="ui negative button"#}

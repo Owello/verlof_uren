@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+
+{% block title %}Gebruiker wijzigen{% endblock %}
+
+{% block content %}
+    <h1 class="ui center aligned header">Pas de gegevens van de gebruiker aan</h1>
+
+    <form class="ui form" method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+         <button class="ui button" type="submit">Wijzig</button>
+    </form>
+
+{% endblock %}

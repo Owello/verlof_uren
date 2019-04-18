@@ -134,14 +134,21 @@ class UserCreate(PermissionRequiredMixin, CreateView):
     model = User
     form_class = UserForm
 
-
     def form_valid(self, form):
         self.object = form.save(commit=False)
-        password = self.object.password
-        self.object.set_password(password)
+        self.object.set_password('welkom123!')
         self.object.save()
         return HttpResponseRedirect(self.get_success_url())
 
+    def get_success_url(self):
+        return reverse_lazy('user-list')
+
+
+class UserUpdate(PermissionRequiredMixin, UpdateView):
+    permission_required = 'auth.add_user'
+    template_name = 'registration/user_update.html'
+    model = User
+    form_class = UserForm
 
     def get_success_url(self):
         return reverse_lazy('user-list')

@@ -43,5 +43,5 @@ class UserForm(ModelForm):
     class Meta:
         model = User
         fields = [
-            'username', 'password', 'first_name', 'last_name', 'email', 'is_active'
+            'username', 'first_name', 'last_name', 'email', 'is_active'
         ]
