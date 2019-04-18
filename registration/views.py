@@ -145,10 +145,22 @@ class UserCreate(PermissionRequiredMixin, CreateView):
 
 
 class UserUpdate(PermissionRequiredMixin, UpdateView):
-    permission_required = 'auth.add_user'
+    permission_required = 'auth.change_user'
     template_name = 'registration/user_update.html'
     model = User
     form_class = UserForm
+
+    def get_success_url(self):
+        return reverse_lazy('user-list')
+
+
+class UserDelete(PermissionRequiredMixin, DeleteView):
+    permission_required = 'auth.delete_user'
+    model = User
+    template_name = 'registration/user_confirm_delete.html'
+
+    def get_queryset(self):
+        return super(UserDelete, self).get_queryset()
 
     def get_success_url(self):
         return reverse_lazy('user-list')

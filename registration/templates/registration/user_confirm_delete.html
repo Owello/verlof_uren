@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+
+{% block title %}Gebruiker Verwijderen{% endblock %}
+
+{% block content %}
+    <h1 class="ui center aligned header">Gebruiker Verwijderen</h1>
+
+    <form method="post">{% csrf_token %}
+        <p>Weet je zeker dat onderstaande gebruiker wilt verwijderen? Je kunt een gebruiker ook inactief maken via
+            aanpassen</p>
+
+        <table class="ui celled table">
+            <thead>
+            <tr>
+                <th>Gebruikersnaam</th>
+                <th>Voornaam</th>
+                <th>Achternaam</th>
+            </thead>
+            <tbody>
+            <tr>
+                <td>{{ object.username}}</td>
+                <td>{{ object.first_name }}</td>
+                <td>{{ object.last_name }}</td>
+            </tr>
+            </tbody>
+        </table>
+        <button class="ui negative button" type="submit">Verwijder</button>
+        <a class="ui button" href="{% url 'user-list' %}">Annuleren</a>
+    </form>
+
+{% endblock %}
