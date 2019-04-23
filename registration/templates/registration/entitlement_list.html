@@ -1,5 +1,5 @@
 {% extends 'base.html' %}
-{% load substract %}
+{% load subtract %}
 
 {% block title %}Overzicht Verlofuren{% endblock %}
 
@@ -23,7 +23,7 @@
                 <td>{{ entitlement.year }}</td>
                 <td>{{ entitlement.leave_hours }}</td>
                 <td>{{ entitlement.used_leave_hours }}</td>
-                <td>{{ entitlement.leave_hours|substract:entitlement.used_leave_hours }}</td>
+                <td>{{ entitlement.leave_hours|subtract:entitlement.used_leave_hours }}</td>
             </tr>
         {% endfor %}
         </tbody>

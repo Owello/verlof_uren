@@ -17,7 +17,10 @@
         Verlofoverzicht
         </a>
     {% endif %}
-    <a class="massive fluid ui red  basic button" href="{% url 'logout' %}?next=/"><i class="icon user"></i>
-        Log out
+    <a class="massive fluid ui red basic button" href="{% url 'logout' %}?next=/"><i class="icon user"></i>
+        Uitloggen
+    </a>
+    <a class="massive fluid ui blue basic button" href="{% url 'password_change' %}?next=/"><i class="icon user"></i>
+        Wachtwoord wijzigen
     </a>
 {% endblock %}

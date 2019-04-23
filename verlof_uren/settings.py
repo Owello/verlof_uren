@@ -18,17 +18,17 @@ INTERNAL_IPS = ['127.0.0.1', 'localhost']
 # Application definition
 
 INSTALLED_APPS = [
+    'registration.apps.RegistrationConfig',
+    'authentication.apps.AuthenticationConfig',
+
+    'debug_toolbar',
+
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-
-    'debug_toolbar',
-
-    'registration.apps.RegistrationConfig',
-    'authentication.apps.AuthenticationConfig',
 ]
 
 MIDDLEWARE = [
