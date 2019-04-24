@@ -42,8 +42,7 @@
                        href="{% url 'user-delete' pk=user.id %}">Verwijderen</a>
                 </td>
                 <td>
-{#                    <a class="ui button" href=""{% url 'leave_registration_list' %}">Overzicht Verlofuren</a>#}
-                    <a class="ui blue button" href="{% url 'index' %}">Overzicht verlofuren</a>
+                    <a class="ui button" href="{% url 'admin-entitlement-list' user_id=user.id  %}">Overzicht Verlofuren</a>
                 </td>
             </tr>
         {% endfor %}

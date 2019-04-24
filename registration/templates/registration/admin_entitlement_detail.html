@@ -1,0 +1,61 @@
+{% extends 'base.html' %}
+{% load subtract %}
+
+{% block title %}Overzicht opgenomen of ingeplande Verlofuren{% endblock %}
+
+
+{% block content %}
+    <table class="ui definition table">
+        <tbody>
+        <tr>
+            <td class="two wide column">Naam</td>
+            <td> {{ entitlement.user }} </td>
+        </tr>
+        <tr>
+            <td>Jaar</td>
+            <td>{{ entitlement.year }}</td>
+        </tr>
+        <tr>
+            <td>Verlofuren</td>
+            <td>{{ entitlement.leave_hours }}</td>
+        </tr>
+        <tr>
+            <td>Gebruikte Uren</td>
+            <td>{{ entitlement.used_leave_hours }}</td>
+        </tr>
+        <tr>
+            <td>Verlofuren over</td>
+            <td>{{ entitlement.leave_hours|subtract:entitlement.used_leave_hours }}</td>
+        </tr>
+        </tbody>
+    </table>
+
+    <h1 class="ui center aligned header">Opgenomen of ingeplande verlofuren</h1>
+
+    <table class="ui celled table">
+        <thead>
+        <tr>
+            <th>Van datum</th>
+            <th>Tot datum</th>
+            <th>Aantal verlofuren</th>
+            <th>Update</th>
+            <th>Delete</th>
+        </thead>
+        <tbody>
+        {% for leave in all_leave_registrations %}
+            <tr>
+                <td>{{ leave.from_date|date:"SHORT_DATE_FORMAT" }}</td>
+                <td>{{ leave.end_date|date:"SHORT_DATE_FORMAT" }}</td>
+                <td>{{ leave.amount_of_hours }}</td>
+                <td>
+                    <a class="ui button" href="{% url 'index' %}">Aanpassen</a>
+                </td>
+                <td>
+                    <a class="ui negative button"
+                       href="{% url 'index' %}">Verwijderen</a>
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}

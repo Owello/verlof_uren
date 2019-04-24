@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+
+{% block title %}Verlofuren Wijzigen{% endblock %}
+
+{% block content %}
+    <h1 class="ui center aligned header">Wijzig verlofuren</h1>
+
+    <a class="ui huge blue label">
+    {{ object.user }}
+    </a>
+    <a class="ui huge olive label">
+    {{ object.year }}
+    </a>
+    <form class="ui form" method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button class="ui button" type="submit">Wijzig</button>
+        <a class="ui button" href="{% url 'admin-entitlement-list' user_id=object.user_id %}">Annuleren</a>
+    </form>
+
+{% endblock %}

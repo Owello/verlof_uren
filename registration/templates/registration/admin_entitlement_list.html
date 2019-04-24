@@ -1,0 +1,37 @@
+{% extends 'base.html' %}
+{% load subtract %}
+
+{% block title %}Overzicht Verlofuren{% endblock %}
+
+
+{% block content %}
+    <h1 class="ui center aligned header">Overzicht Verlofuren</h1>
+    <a class=" ui positive button" href="{% url 'admin-entitlement-create' user_id=user_id%}">Voeg verlofuren voor een nieuw jaar toe</a>
+    <table class="ui celled table">
+        <thead>
+        <tr>
+            <th>Naam</th>
+            <th>Jaar</th>
+            <th>Verlofuren</th>
+            <th>Gebruikte uren</th>
+            <th>Verlofuren over</th>
+            <th></th>
+            <th></th>
+            <th></th>
+        </thead>
+        <tbody>
+        {% for entitlement in all_entitlements %}
+            <tr>
+                <td>{{ entitlement.user }} </td>
+                <td>{{ entitlement.year }}</td>
+                <td>{{ entitlement.leave_hours }}</td>
+                <td>{{ entitlement.used_leave_hours }}</td>
+                <td>{{ entitlement.leave_hours|subtract:entitlement.used_leave_hours }}</td>
+                <td><a class="ui positive button" href="{% url 'admin-entitlement-update' pk=entitlement.id %}">Aanpassen</a></td>
+                <td><a class="ui negative button" href="{% url 'admin-entitlement-delete' pk=entitlement.id %}">Verwijderen</a></td>
+                <td><a class="ui button" href="{%  url 'admin-entitlement-detail' user_id=entitlement.user_id year=entitlement.year %}">Overzicht opgenomen verlofuren</a></td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}

@@ -1,7 +1,7 @@
 from django.contrib.auth.models import User
 from django.forms import ModelForm, DateInput, forms, CheckboxSelectMultiple
 
-from .models import LeaveRegistration
+from .models import LeaveRegistration, Entitlement
 
 
 class LeaveRegistrationForm(ModelForm):
@@ -48,3 +48,35 @@ class UserForm(ModelForm):
         widgets = {
             'groups': CheckboxSelectMultiple()
         }
+
+
+class EntitlementForm(ModelForm):
+    required_css_class = 'required'
+
+    class Meta:
+        model = Entitlement
+        fields = [
+            'year', 'leave_hours'
+        ]
+
+    def __init__(self, *args, **kwargs):
+        self.years = kwargs.pop('years')
+        super(EntitlementForm, self).__init__(*args, **kwargs)
+
+    def clean(self):
+        year = self.cleaned_data.get('year')
+        if year in self.years:
+            raise forms.ValidationError(
+                "Er zijn al verlofuren voor dit jaar ingevuld.")
+
+        return self.cleaned_data
+
+
+class AdminEntitlementForm(ModelForm):
+    required_css_class = 'required'
+
+    class Meta:
+        model = Entitlement
+        fields = [
+            'leave_hours'
+        ]
