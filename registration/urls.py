@@ -1,16 +1,16 @@
 from django.urls import path
 from . import views
-from .views import EntitlementDetail, LeaveRegistrationCreate, LeaveRegistrationUpdate, LeaveRegistrationDelete, \
-    EntitlementList, UserList, UserCreate, UserUpdate, UserDelete, AdminEntitlementList, AdminEntitlementDetail, \
-    AdminEntitlementCreate, AdminEntitlementUpdate, AdminEntitlementDelete
+from .views import EntitlementDetail, LeaveRegistrationCreate, LeaveRegistrationUpdate, LeaveRegistrationDelete, EntitlementList, UserList, UserCreate, UserUpdate, UserDelete, \
+    AdminEntitlementList, AdminEntitlementDetail, AdminEntitlementCreate, AdminEntitlementUpdate, AdminEntitlementDelete, AdminLeaveRegistrationDelete, \
+    AdminLeaveRegistrationCreate, AdminLeaveRegistrationUpdate
 
 urlpatterns = [
     path('entitlement/<int:year>', EntitlementDetail.as_view(), name='entitlement-detail'),
-    path('leave_registration/create', LeaveRegistrationCreate.as_view(), name='leave_registration_create'),
+    path('leave_registration/create', LeaveRegistrationCreate.as_view(), name='leave-registration-create'),
     path('leave_registration/<int:pk>/update', LeaveRegistrationUpdate.as_view(),
-         name='leave_registration_update'),
+         name='leave-registration-update'),
     path('leave_registration/<int:pk>/delete', LeaveRegistrationDelete.as_view(),
-         name='leave_registration_delete'),
+         name='leave-registration-delete'),
     path('entitlement_list', EntitlementList.as_view(), name='entitlement-list'),
     path('useradmin', UserList.as_view(), name='user-list'),
     path('useradmin/createuser', UserCreate.as_view(), name='user-create'),
@@ -24,6 +24,13 @@ urlpatterns = [
          name='admin-entitlement-create'),
     path('useradmin/entitlement/<int:pk>/update', AdminEntitlementUpdate.as_view(),
          name='admin-entitlement-update'),
-    path('useradmin/entitlement/<int:pk>/delete', AdminEntitlementDelete.as_view(), name='admin-entitlement-delete'),
+    path('useradmin/entitlement/<int:pk>/delete', AdminEntitlementDelete.as_view(),
+         name='admin-entitlement-delete'),
+    path('useradmin/leave_registration/<int:user_id>/create', AdminLeaveRegistrationCreate.as_view(),
+         name='admin-leaveregistration-create'),
+    path('useradmin/leave_registration/<int:pk>/update', AdminLeaveRegistrationUpdate.as_view(),
+         name='admin-leaveregistration-update'),
+    path('useradmin/leave_registration/<int:pk>/delete', AdminLeaveRegistrationDelete.as_view(),
+         name='admin-leaveregistration-delete'),
     path('', views.Index.as_view(), name='index')
 ]

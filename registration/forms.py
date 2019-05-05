@@ -17,9 +17,8 @@ class LeaveRegistrationForm(ModelForm):
             'end_date': DateInput(attrs={'type': 'date'})
         }
 
-    def __init__(self, *args, **kwargs):
-        self.user = kwargs.pop('user')
-        self.years = kwargs.pop('years')
+    def __init__(self, years, *args, **kwargs):
+        self.years = years
         super(LeaveRegistrationForm, self).__init__(*args, **kwargs)
 
     def clean(self):

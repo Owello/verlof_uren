@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+
+{% block title %}Verlof Verwijderen{% endblock %}
+
+{% block content %}
+    <h1 class="ui center aligned header">Verlof Verwijderen</h1>
+
+    <form method="post">{% csrf_token %}
+        <p>Weet je zeker dat je onderstaand verlof wilt verwijderen?</p>
+
+        <table class="ui celled table">
+            <thead>
+            <tr>
+                <th>van datum</th>
+                <th>tot datum</th>
+                <th>aantal verlofuren</th>
+            </thead>
+            <tbody>
+            <tr>
+                <td>{{ object.from_date|date:"SHORT_DATE_FORMAT" }}</td>
+                <td>{{ object.end_date|date:"SHORT_DATE_FORMAT" }}</td>
+                <td>{{ object.amount_of_hours }}</td>
+            </tr>
+            </tbody>
+        </table>
+        <button class="ui negative button" type="submit">Verwijder</button>
+        <a class="ui button" href="{% url 'admin-entitlement-detail' user_id=object.user_id year=object.from_date.year %}">Annuleren</a>
+    </form>
+
+{% endblock %}

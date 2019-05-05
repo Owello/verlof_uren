@@ -5,19 +5,19 @@
 
 
 {% block content %}
-    <h1 class="ui center aligned header">Overzicht Verlofuren</h1>
-    <a class=" ui positive button" href="{% url 'admin-entitlement-create' user_id=user_id%}">Voeg verlofuren voor een nieuw jaar toe</a>
+    <h1 class="ui center aligned header">Overzicht Verlofsaldo</h1>
+    <a class=" ui positive button" href="{% url 'admin-entitlement-create' user_id=user_id%}">Voeg verlofsaldo voor een nieuw jaar toe</a>
     <table class="ui celled table">
         <thead>
         <tr>
             <th>Naam</th>
             <th>Jaar</th>
-            <th>Verlofuren</th>
-            <th>Gebruikte uren</th>
+            <th>Verlofsaldo</th>
+            <th>Opgenomen uren</th>
             <th>Verlofuren over</th>
-            <th></th>
-            <th></th>
-            <th></th>
+            <th>Verlofsaldo aanpassen</th>
+            <th>Verlofsaldo verwijderen</th>
+            <th>Verlofuren bekijken</th>
         </thead>
         <tbody>
         {% for entitlement in all_entitlements %}

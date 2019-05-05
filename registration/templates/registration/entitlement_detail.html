@@ -71,11 +71,11 @@
                 <td>{{ leave.end_date|date:"SHORT_DATE_FORMAT" }}</td>
                 <td>{{ leave.amount_of_hours }}</td>
                 <td>
-                    <a class="ui button" href="{% url 'leave_registration_update' pk=leave.id %}">Aanpassen</a>
+                    <a class="ui button" href="{% url 'leave-registration-update' pk=leave.id %}">Aanpassen</a>
                 </td>
                 <td>
                     <a class="ui negative button"
-                       href="{% url 'leave_registration_delete' pk=leave.id %}">Verwijderen</a>
+                       href="{% url 'leave-registration-delete' pk=leave.id %}">Verwijderen</a>
                 </td>
             </tr>
         {% endfor %}

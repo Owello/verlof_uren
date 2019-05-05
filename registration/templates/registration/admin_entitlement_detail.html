@@ -5,6 +5,7 @@
 
 
 {% block content %}
+{#    <a class=" ui positive button" href="{% url 'admin-leaveregistration-create' user_id=user_id%}">Voeg nieuwe gebruiker toe</a>#}
     <table class="ui definition table">
         <tbody>
         <tr>
@@ -48,11 +49,11 @@
                 <td>{{ leave.end_date|date:"SHORT_DATE_FORMAT" }}</td>
                 <td>{{ leave.amount_of_hours }}</td>
                 <td>
-                    <a class="ui button" href="{% url 'index' %}">Aanpassen</a>
+                    <a class="ui button" href="{% url 'admin-leaveregistration-update' pk=leave.id %}">Aanpassen</a>
                 </td>
                 <td>
                     <a class="ui negative button"
-                       href="{% url 'index' %}">Verwijderen</a>
+                       href="{% url 'admin-leaveregistration-delete' pk=leave.id %}">Verwijderen</a>
                 </td>
             </tr>
         {% endfor %}
