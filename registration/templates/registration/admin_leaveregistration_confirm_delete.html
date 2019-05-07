@@ -24,7 +24,7 @@
             </tbody>
         </table>
         <button class="ui negative button" type="submit">Verwijder</button>
-        <a class="ui button" href="{% url 'admin-entitlement-detail' user_id=object.user_id year=object.from_date.year %}">Annuleren</a>
+        <a class="ui button" href="{% url 'admin-entitlement-detail' user_id=object.entitlement.user_id year=object.from_date.year %}">Annuleren</a>
     </form>
 
 {% endblock %}

@@ -5,7 +5,6 @@
 
 
 {% block content %}
-{#    <a class=" ui positive button" href="{% url 'admin-leaveregistration-create' user_id=user_id%}">Voeg nieuwe gebruiker toe</a>#}
     <table class="ui definition table">
         <tbody>
         <tr>
@@ -32,7 +31,7 @@
     </table>
 
     <h1 class="ui center aligned header">Opgenomen of ingeplande verlofuren</h1>
-
+    <a class=" ui blue button" href="{% url 'admin-leaveregistration-create' user_id=user_id %}">Voeg opgenomen uren toe</a>
     <table class="ui celled table">
         <thead>
         <tr>

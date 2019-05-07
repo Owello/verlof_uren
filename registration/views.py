@@ -166,7 +166,7 @@ class UserDelete(PermissionRequiredMixin, DeleteView):
 
 
 class AdminEntitlementList(PermissionRequiredMixin, ListView):
-    permission_required = 'registration.change_entitlement'
+    permission_required = ('auth.view_user', 'registration.change_entitlement')
     model = Entitlement
     template_name = 'registration/admin_entitlement_list.html'
     login_url = reverse_lazy('login')
@@ -181,7 +181,7 @@ class AdminEntitlementList(PermissionRequiredMixin, ListView):
 
 
 class AdminEntitlementDetail(PermissionRequiredMixin, DetailView):
-    permission_required = 'registration.change_entitlement'
+    permission_required = ('auth.view_user', 'registration.change_entitlement')
     model = Entitlement
     template_name = 'registration/admin_entitlement_detail.html'
     login_url = reverse_lazy('login')
@@ -197,11 +197,12 @@ class AdminEntitlementDetail(PermissionRequiredMixin, DetailView):
         context = super(AdminEntitlementDetail, self).get_context_data(**kwargs)
         leave_registrations = LeaveRegistration.objects.filter(entitlement=self.object)
         context['all_leave_registrations'] = leave_registrations
+        context['user_id'] = self.kwargs['user_id']
         return context
 
 
 class AdminEntitlementCreate(PermissionRequiredMixin, CreateView):
-    permission_required = 'registration.add_entitlement'
+    permission_required = ('auth.view_user', 'registration.add_entitlement')
     template_name = 'registration/admin_entitlement_create.html'
     model = Entitlement
     form_class = EntitlementForm
@@ -226,7 +227,7 @@ class AdminEntitlementCreate(PermissionRequiredMixin, CreateView):
 
 
 class AdminEntitlementUpdate(PermissionRequiredMixin, UpdateView):
-    permission_required = 'registration.change_entitlement'
+    permission_required = ('auth.view_user', 'registration.change_entitlement')
     template_name = 'registration/admin_entitlement_update.html'
     model = Entitlement
     form_class = AdminEntitlementForm
@@ -236,7 +237,7 @@ class AdminEntitlementUpdate(PermissionRequiredMixin, UpdateView):
 
 
 class AdminEntitlementDelete(PermissionRequiredMixin, DeleteView):
-    permission_required = 'registration.delete_entitlement'
+    permission_required = ('auth.view_user', 'registration.delete_entitlement')
     template_name = 'registration/admin_entitlement_delete.html'
     model = Entitlement
 
@@ -244,9 +245,8 @@ class AdminEntitlementDelete(PermissionRequiredMixin, DeleteView):
         return reverse_lazy('admin-entitlement-list', kwargs={'user_id': self.object.user_id})
 
 
-# Permission is not sufficient. Other users can access this page when entering the URL.
 class AdminLeaveRegistrationCreate(PermissionRequiredMixin, CreateView):
-    permission_required = 'registration.add_leaveregistration'
+    permission_required = ('auth.view_user', 'registration.add_leaveregistration')
     template_name = 'registration/leaveregistration_create.html'
     model = LeaveRegistration
     form_class = LeaveRegistrationForm
@@ -262,18 +262,18 @@ class AdminLeaveRegistrationCreate(PermissionRequiredMixin, CreateView):
 
     def form_valid(self, form):
         self.object = form.save(commit=False)
-        self.object.user = self.request.user
+        self.object.user = self.kwargs['user_id']
         self.object.entitlement = Entitlement.objects.get(user=self.object.user, year=self.object.from_date.year)
         self.object.save()
         return HttpResponseRedirect(self.get_success_url())
 
     def get_success_url(self):
-        return reverse_lazy('admin-entitlement-detail', kwargs={'year': self.object.from_date.year})
+        return reverse_lazy('admin-entitlement-detail',
+                            kwargs={'user_id': self.object.entitlement.user_id, 'year': self.object.from_date.year})
 
 
-# Permission is not sufficient. Other users can access this page when entering the URL.
 class AdminLeaveRegistrationUpdate(PermissionRequiredMixin, UpdateView):
-    permission_required = 'registration.change_leaveregistration'
+    permission_required = ('auth.view_user', 'registration.change_leaveregistration')
     template_name = 'registration/admin_leaveregistration_update.html'
     model = LeaveRegistration
     form_class = LeaveRegistrationForm
@@ -288,15 +288,44 @@ class AdminLeaveRegistrationUpdate(PermissionRequiredMixin, UpdateView):
         return kwargs
 
     def get_success_url(self):
-        return reverse_lazy('admin-entitlement-detail', kwargs={'user_id': self.object.entitlement.user_id, 'year': self.object.from_date.year})
+        return reverse_lazy('admin-entitlement-detail',
+                            kwargs={'user_id': self.object.entitlement.user_id, 'year': self.object.from_date.year})
 
 
-# Permission is not sufficient. Other users can access this page when entering the URL.
-# I could not get it to work with the correct template.. 'Annuleren' Does not work.
 class AdminLeaveRegistrationDelete(PermissionRequiredMixin, DeleteView):
-    permission_required = 'registration.delete_leaveregistration'
-    # template_name = 'registration/admin_leaveregistration_confirm_delete.html'
+    permission_required = ('auth.view_user', 'registration.delete_leaveregistration')
+    template_name = 'registration/admin_leaveregistration_confirm_delete.html'
     model = LeaveRegistration
 
     def get_success_url(self):
-        return reverse_lazy('admin-entitlement-detail', kwargs={'user_id': self.object.entitlement.user_id, 'year': self.object.from_date.year})
+        return reverse_lazy('admin-entitlement-detail',
+                            kwargs={'user_id': self.object.entitlement.user_id, 'year': self.object.from_date.year})
+
+
+class AdminUsersEntitlementList(PermissionRequiredMixin, ListView):
+    permission_required = ('auth.view_user', 'registration.view_entitlement')
+    template_name = 'registration/admin_users_entitlement_list.html'
+    model = Entitlement
+    login_url = reverse_lazy('login')
+
+    def get_queryset(self):
+        return super(AdminUsersEntitlementList, self).get_queryset() \
+            .select_related('user') \
+            .filter(year=self.kwargs['year']) \
+            .annotate(used_leave_hours=Coalesce(Sum('leaveregistration__amount_of_hours'), 0)) \
+            .order_by("-used_leave_hours")
+
+    def get_context_data(self, *, object_list=None, **kwargs):
+        context = super(AdminUsersEntitlementList, self).get_context_data()
+        years = Entitlement.objects.values_list('year', flat=True).distinct()
+        ordered_years = sorted(years)
+        context['years'] = ordered_years
+        leave_hours = Entitlement.objects.values_list('leave_hours', flat=True)
+        total_leave_hours = sum(leave_hours)
+        context['total_leave_hours'] = total_leave_hours
+        amount_of_hours = LeaveRegistration.objects.values_list('amount_of_hours', flat=True)
+        total_amount_of_hours = sum(amount_of_hours)
+        context['total_amount_of_hours'] = total_amount_of_hours
+        not_used_leave_hours = total_leave_hours - total_amount_of_hours
+        context['not_used_leave_hours'] = not_used_leave_hours
+        return context

@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 {% load subtract %}
 
-{% block title %}Verlofuren{% endblock %}
+{% block title %}Overzicht opgenomen of ingeplande Verlofuren{% endblock %}
 
 {% block js %}
     <script type="application/javascript">
@@ -10,10 +10,6 @@
 {% endblock %}
 
 {% block content %}
-    <h1 class="ui center aligned header">Verlofuren</h1>
-
-
-    {#    example of a dropdown Menu.#}
 
     <div class="ui selection dropdown">
         <input type="hidden" name="jaar">
@@ -27,7 +23,6 @@
     </div>
 
 
-    {#    example of a table for the entitlement#}
     <table class="ui definition table">
         <tbody>
         <tr>

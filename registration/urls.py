@@ -1,8 +1,10 @@
 from django.urls import path
 from . import views
-from .views import EntitlementDetail, LeaveRegistrationCreate, LeaveRegistrationUpdate, LeaveRegistrationDelete, EntitlementList, UserList, UserCreate, UserUpdate, UserDelete, \
-    AdminEntitlementList, AdminEntitlementDetail, AdminEntitlementCreate, AdminEntitlementUpdate, AdminEntitlementDelete, AdminLeaveRegistrationDelete, \
-    AdminLeaveRegistrationCreate, AdminLeaveRegistrationUpdate
+from .views import EntitlementDetail, LeaveRegistrationCreate, LeaveRegistrationUpdate, LeaveRegistrationDelete, \
+    EntitlementList, UserList, UserCreate, UserUpdate, UserDelete, \
+    AdminEntitlementList, AdminEntitlementDetail, AdminEntitlementCreate, AdminEntitlementUpdate, \
+    AdminEntitlementDelete, AdminLeaveRegistrationDelete, \
+    AdminLeaveRegistrationCreate, AdminLeaveRegistrationUpdate, AdminUsersEntitlementList
 
 urlpatterns = [
     path('entitlement/<int:year>', EntitlementDetail.as_view(), name='entitlement-detail'),
@@ -32,5 +34,7 @@ urlpatterns = [
          name='admin-leaveregistration-update'),
     path('useradmin/leave_registration/<int:pk>/delete', AdminLeaveRegistrationDelete.as_view(),
          name='admin-leaveregistration-delete'),
+    path('useradmin/users/entitlement/list/<int:year>', AdminUsersEntitlementList.as_view(),
+         name='admin-users-entitlement-list'),
     path('', views.Index.as_view(), name='index')
 ]

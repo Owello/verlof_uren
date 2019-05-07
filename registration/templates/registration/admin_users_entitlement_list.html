@@ -1,0 +1,77 @@
+{% extends 'base.html' %}
+{% load subtract %}
+
+{%  block title %}Overzicht verlofsaldo gebruikers{% endblock %}
+
+{% block js %}
+    <script type="application/javascript">
+        $('.ui.dropdown').dropdown();
+    </script>
+{% endblock %}
+
+{% block content %}
+    <h1 class="'ui center aligned header">
+        Overzicht verlofsaldo gebruikers
+    </h1>
+
+    <div class="ui selection dropdown">
+        <input type="hidden" name="jaar">
+        <i class="dropdown icon"></i>
+        <div class="default text">Jaar</div>
+        <div class="menu">
+            {% for year in years %}
+                <a class="item" href="{% url 'admin-users-entitlement-list' year=year %}"> {{ year }} </a>
+            {% endfor %}
+        </div>
+    </div>
+
+
+    <table class="ui celled table">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Gebruikersnaam</th>
+                <th>Voornaam</th>
+                <th>Achternaam</th>
+                <th>Jaar</th>
+                <th>Verlofsaldo</th>
+                <th>Opgenomen uren</th>
+                <th>Verlofuren over</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for entitlement in entitlement_list %}
+                    <tr>
+                        <td> {{ entitlement.user.id}}</td>
+                        <td> {{ entitlement.user.username}}</td>
+                        <td> {{ entitlement.user.first_name }}</td>
+                        <td> {{ entitlement.user.last_name }}</td>
+                        <td> {{ entitlement.year }}</td>
+                        <td> {{ entitlement.leave_hours }}</td>
+                        <td> {{ entitlement.used_leave_hours }}</td>
+                        {% if entitlement.leave_hours|subtract:entitlement.used_leave_hours < 0 %}
+                            <td><a class="ui red large label">{{ entitlement.leave_hours|subtract:entitlement.used_leave_hours }}</a></td>
+                        {% endif %}
+                        {% if entitlement.leave_hours|subtract:entitlement.used_leave_hours < 25 and entitlement.leave_hours|subtract:entitlement.used_leave_hours >= 0 %}
+                            <td><a class="ui orange large label">{{ entitlement.leave_hours|subtract:entitlement.used_leave_hours }}</a></td>
+                        {% endif %}
+                        {% if entitlement.leave_hours > entitlement.used_leave_hours %}
+                            <td><a class="ui green large label">{{ entitlement.leave_hours|subtract:entitlement.used_leave_hours }}</a></td>
+                        {% endif %}
+                    </tr>
+        {% endfor %}
+        </tbody>
+        <thead>
+            <tr>
+                <th>{{ entitlement_list.leave_hours__sum }}</th>
+                <th></th>
+                <th></th>
+                <th></th>
+                <th>Totaal</th>
+                <th class= "negative"> {{ total_leave_hours }} </th>
+                <th> {{ total_amount_of_hours }}</th>
+                <th> {{ not_used_leave_hours }}</th>
+            </tr>
+        </thead>
+    </table>
+{% endblock %}

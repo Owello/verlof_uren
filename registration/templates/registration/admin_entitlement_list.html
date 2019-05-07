@@ -1,12 +1,13 @@
 {% extends 'base.html' %}
 {% load subtract %}
 
-{% block title %}Overzicht Verlofuren{% endblock %}
+{% block title %}Overzicht Verlofsaldo{% endblock %}
 
 
 {% block content %}
     <h1 class="ui center aligned header">Overzicht Verlofsaldo</h1>
-    <a class=" ui positive button" href="{% url 'admin-entitlement-create' user_id=user_id%}">Voeg verlofsaldo voor een nieuw jaar toe</a>
+    <a class=" ui blue button" href="{% url 'admin-entitlement-create' user_id=user_id %}">Voeg verlofsaldo voor een nieuw jaar toe</a>
+    <a class=" ui blue button" href="{% url 'admin-leaveregistration-create' user_id=user_id %}">Voeg opgenomen uren toe</a>
     <table class="ui celled table">
         <thead>
         <tr>
