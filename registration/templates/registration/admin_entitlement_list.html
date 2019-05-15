@@ -1,5 +1,4 @@
 {% extends 'base.html' %}
-{% load subtract %}
 
 {% block title %}Overzicht Verlofsaldo{% endblock %}
 
@@ -26,8 +25,8 @@
                 <td>{{ entitlement.user }} </td>
                 <td>{{ entitlement.year }}</td>
                 <td>{{ entitlement.leave_hours }}</td>
-                <td>{{ entitlement.used_leave_hours }}</td>
-                <td>{{ entitlement.leave_hours|subtract:entitlement.used_leave_hours }}</td>
+                <td>{{ entitlement.get_used_hours }}</td>
+                <td>{{ entitlement.get_remainder_hours }}</td>
                 <td><a class="ui positive button" href="{% url 'admin-entitlement-update' pk=entitlement.id %}">Aanpassen</a></td>
                 <td><a class="ui negative button" href="{% url 'admin-entitlement-delete' pk=entitlement.id %}">Verwijderen</a></td>
                 <td><a class="ui button" href="{%  url 'admin-entitlement-detail' user_id=entitlement.user_id year=entitlement.year %}">Overzicht opgenomen verlofuren</a></td>

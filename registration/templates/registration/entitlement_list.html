@@ -1,5 +1,4 @@
 {% extends 'base.html' %}
-{% load subtract %}
 
 {% block title %}Overzicht Verlofsaldo{% endblock %}
 
@@ -22,8 +21,8 @@
                 <td>{{ entitlement.user }} </td>
                 <td>{{ entitlement.year }}</td>
                 <td>{{ entitlement.leave_hours }}</td>
-                <td>{{ entitlement.used_leave_hours }}</td>
-                <td>{{ entitlement.leave_hours|subtract:entitlement.used_leave_hours }}</td>
+                <td>{{ entitlement.get_used_hours }}</td>
+                <td>{{ entitlement.get_remainder_hours }}</td>
             </tr>
         {% endfor %}
         </tbody>

@@ -26,8 +26,7 @@ class EntitlementList(PermissionRequiredMixin, ListView):
 
     def get_context_data(self, **kwargs):
         context = super(EntitlementList, self).get_context_data(**kwargs)
-        entitlements = Entitlement.objects.filter(user=self.request.user).annotate(
-            used_leave_hours=Coalesce(Sum('leaveregistration__amount_of_hours'), 0))
+        entitlements = Entitlement.objects.filter(user=self.request.user).annotate_used_leave_hours()
         context['all_entitlements'] = entitlements
         return context
 
@@ -41,8 +40,7 @@ class EntitlementDetail(PermissionRequiredMixin, DetailView):
         return get_object_or_404(self.get_queryset(), user=self.request.user, year=self.kwargs['year'])
 
     def get_queryset(self):
-        return super(EntitlementDetail, self).get_queryset().annotate(
-            used_leave_hours=Coalesce(Sum('leaveregistration__amount_of_hours'), 0))
+        return super(EntitlementDetail, self).get_queryset().annotate_used_leave_hours()
 
     def get_context_data(self, **kwargs):
         context = super(EntitlementDetail, self).get_context_data(**kwargs)
@@ -173,8 +171,7 @@ class AdminEntitlementList(PermissionRequiredMixin, ListView):
 
     def get_context_data(self, **kwargs):
         context = super(AdminEntitlementList, self).get_context_data(**kwargs)
-        entitlements = Entitlement.objects.filter(user=self.kwargs['user_id']).annotate(
-            used_leave_hours=Coalesce(Sum('leaveregistration__amount_of_hours'), 0))
+        entitlements = Entitlement.objects.filter(user=self.kwargs['user_id']).annotate_used_leave_hours()
         context['all_entitlements'] = entitlements
         context['user_id'] = self.kwargs['user_id']
         return context
@@ -190,8 +187,7 @@ class AdminEntitlementDetail(PermissionRequiredMixin, DetailView):
         return get_object_or_404(self.get_queryset(), user_id=self.kwargs['user_id'], year=self.kwargs['year'])
 
     def get_queryset(self):
-        return super(AdminEntitlementDetail, self).get_queryset().annotate(
-            used_leave_hours=Coalesce(Sum('leaveregistration__amount_of_hours'), 0))
+        return super(AdminEntitlementDetail, self).get_queryset().annotate_used_leave_hours()
 
     def get_context_data(self, **kwargs):
         context = super(AdminEntitlementDetail, self).get_context_data(**kwargs)
@@ -312,7 +308,7 @@ class AdminUsersEntitlementList(PermissionRequiredMixin, ListView):
         return super(AdminUsersEntitlementList, self).get_queryset() \
             .select_related('user') \
             .filter(year=self.kwargs['year']) \
-            .annotate(used_leave_hours=Coalesce(Sum('leaveregistration__amount_of_hours'), 0)) \
+            .annotate_used_leave_hours() \
             .order_by("-used_leave_hours")
 
     def get_context_data(self, *, object_list=None, **kwargs):

@@ -1,5 +1,4 @@
 {% extends 'base.html' %}
-{% load subtract %}
 
 {% block title %}Overzicht opgenomen of ingeplande Verlofuren{% endblock %}
 
@@ -21,11 +20,11 @@
         </tr>
         <tr>
             <td>Gebruikte Uren</td>
-            <td>{{ entitlement.used_leave_hours }}</td>
+            <td>{{ entitlement.get_used_hours }}</td>
         </tr>
         <tr>
             <td>Verlofuren over</td>
-            <td>{{ entitlement.leave_hours|subtract:entitlement.used_leave_hours }}</td>
+            <td>{{ entitlement.get_remainder_hours }}</td>
         </tr>
         </tbody>
     </table>

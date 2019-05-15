@@ -8,6 +8,8 @@ verify_ssl = true
 [packages]
 django = "*"
 django-debug-toolbar = "*"
+coverage = "*"
+model-mommy = "*"
 
 [requires]
 python_version = "3.7"

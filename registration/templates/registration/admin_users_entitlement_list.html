@@ -1,5 +1,4 @@
 {% extends 'base.html' %}
-{% load subtract %}
 
 {%  block title %}Overzicht verlofsaldo gebruikers{% endblock %}
 
@@ -48,17 +47,8 @@
                         <td> {{ entitlement.user.last_name }}</td>
                         <td> {{ entitlement.year }}</td>
                         <td> {{ entitlement.leave_hours }}</td>
-                        <td> {{ entitlement.used_leave_hours }}</td>
-                        {% if entitlement.leave_hours|subtract:entitlement.used_leave_hours < 0 %}
-                            <td><a class="ui red large label">{{ entitlement.leave_hours|subtract:entitlement.used_leave_hours }}</a></td>
-                        {% endif %}
-                        {% if entitlement.leave_hours|subtract:entitlement.used_leave_hours < 25 and entitlement.leave_hours|subtract:entitlement.used_leave_hours >= 0 %}
-                            <td><a class="ui orange large label">{{ entitlement.leave_hours|subtract:entitlement.used_leave_hours }}</a></td>
-                        {% endif %}
-                        {% if entitlement.leave_hours > entitlement.used_leave_hours %}
-                            <td><a class="ui green large label">{{ entitlement.leave_hours|subtract:entitlement.used_leave_hours }}</a></td>
-                        {% endif %}
-                    </tr>
+                        <td> {{ entitlement.get_used_hours }}</td>
+                        <td><a class="ui {{ entitlement.get_color }} large label">{{ entitlement.get_remainder_hours }}</a></td>
         {% endfor %}
         </tbody>
         <thead>
