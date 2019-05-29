@@ -1,6 +1,4 @@
 from django.contrib.auth.models import User
-from django.db.models import Sum
-from django.db.models.functions import Coalesce
 from django.shortcuts import get_object_or_404
 from django.urls import reverse_lazy
 from django.views.generic import TemplateView, DetailView, CreateView, UpdateView, DeleteView, ListView

@@ -1,4 +1,7 @@
 import os
+import sys
+
+IS_TEST = sys.argv[1] == 'test'
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -41,6 +44,10 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'debug_toolbar.middleware.DebugToolbarMiddleware',
 ]
+
+if IS_TEST:
+    INSTALLED_APPS.remove('debug_toolbar')
+    MIDDLEWARE.remove('debug_toolbar.middleware.DebugToolbarMiddleware')
 
 ROOT_URLCONF = 'verlof_uren.urls'
 

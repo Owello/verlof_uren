@@ -1,0 +1,306 @@
+[    {
+        "model": "auth.permission",
+        "pk": 1,
+        "fields": {
+            "name": "Can add entitlement",
+            "content_type": 1,
+            "codename": "add_entitlement"
+        }
+    },
+    {
+        "model": "auth.permission",
+        "pk": 2,
+        "fields": {
+            "name": "Can change entitlement",
+            "content_type": 1,
+            "codename": "change_entitlement"
+        }
+    },
+    {
+        "model": "auth.permission",
+        "pk": 3,
+        "fields": {
+            "name": "Can delete entitlement",
+            "content_type": 1,
+            "codename": "delete_entitlement"
+        }
+    },
+    {
+        "model": "auth.permission",
+        "pk": 4,
+        "fields": {
+            "name": "Can view entitlement",
+            "content_type": 1,
+            "codename": "view_entitlement"
+        }
+    },
+    {
+        "model": "auth.permission",
+        "pk": 5,
+        "fields": {
+            "name": "Can add leave registration",
+            "content_type": 2,
+            "codename": "add_leaveregistration"
+        }
+    },
+    {
+        "model": "auth.permission",
+        "pk": 6,
+        "fields": {
+            "name": "Can change leave registration",
+            "content_type": 2,
+            "codename": "change_leaveregistration"
+        }
+    },
+    {
+        "model": "auth.permission",
+        "pk": 7,
+        "fields": {
+            "name": "Can delete leave registration",
+            "content_type": 2,
+            "codename": "delete_leaveregistration"
+        }
+    },
+    {
+        "model": "auth.permission",
+        "pk": 8,
+        "fields": {
+            "name": "Can view leave registration",
+            "content_type": 2,
+            "codename": "view_leaveregistration"
+        }
+    },
+    {
+        "model": "auth.permission",
+        "pk": 9,
+        "fields": {
+            "name": "Can add log entry",
+            "content_type": 3,
+            "codename": "add_logentry"
+        }
+    },
+    {
+        "model": "auth.permission",
+        "pk": 10,
+        "fields": {
+            "name": "Can change log entry",
+            "content_type": 3,
+            "codename": "change_logentry"
+        }
+    },
+    {
+        "model": "auth.permission",
+        "pk": 11,
+        "fields": {
+            "name": "Can delete log entry",
+            "content_type": 3,
+            "codename": "delete_logentry"
+        }
+    },
+    {
+        "model": "auth.permission",
+        "pk": 12,
+        "fields": {
+            "name": "Can view log entry",
+            "content_type": 3,
+            "codename": "view_logentry"
+        }
+    },
+    {
+        "model": "auth.permission",
+        "pk": 13,
+        "fields": {
+            "name": "Can add permission",
+            "content_type": 4,
+            "codename": "add_permission"
+        }
+    },
+    {
+        "model": "auth.permission",
+        "pk": 14,
+        "fields": {
+            "name": "Can change permission",
+            "content_type": 4,
+            "codename": "change_permission"
+        }
+    },
+    {
+        "model": "auth.permission",
+        "pk": 15,
+        "fields": {
+            "name": "Can delete permission",
+            "content_type": 4,
+            "codename": "delete_permission"
+        }
+    },
+    {
+        "model": "auth.permission",
+        "pk": 16,
+        "fields": {
+            "name": "Can view permission",
+            "content_type": 4,
+            "codename": "view_permission"
+        }
+    },
+    {
+        "model": "auth.permission",
+        "pk": 17,
+        "fields": {
+            "name": "Can add group",
+            "content_type": 5,
+            "codename": "add_group"
+        }
+    },
+    {
+        "model": "auth.permission",
+        "pk": 18,
+        "fields": {
+            "name": "Can change group",
+            "content_type": 5,
+            "codename": "change_group"
+        }
+    },
+    {
+        "model": "auth.permission",
+        "pk": 19,
+        "fields": {
+            "name": "Can delete group",
+            "content_type": 5,
+            "codename": "delete_group"
+        }
+    },
+    {
+        "model": "auth.permission",
+        "pk": 20,
+        "fields": {
+            "name": "Can view group",
+            "content_type": 5,
+            "codename": "view_group"
+        }
+    },
+    {
+        "model": "auth.permission",
+        "pk": 21,
+        "fields": {
+            "name": "Can add user",
+            "content_type": 6,
+            "codename": "add_user"
+        }
+    },
+    {
+        "model": "auth.permission",
+        "pk": 22,
+        "fields": {
+            "name": "Can change user",
+            "content_type": 6,
+            "codename": "change_user"
+        }
+    },
+    {
+        "model": "auth.permission",
+        "pk": 23,
+        "fields": {
+            "name": "Can delete user",
+            "content_type": 6,
+            "codename": "delete_user"
+        }
+    },
+    {
+        "model": "auth.permission",
+        "pk": 24,
+        "fields": {
+            "name": "Can view user",
+            "content_type": 6,
+            "codename": "view_user"
+        }
+    },
+    {
+        "model": "auth.group",
+        "pk": 1,
+        "fields": {
+            "name": "Employee",
+            "permissions": [
+                4,
+                5,
+                6,
+                7,
+                8
+            ]
+        }
+    },
+    {
+        "model": "auth.group",
+        "pk": 2,
+        "fields": {
+            "name": "Employer",
+            "permissions": [
+                21,
+                22,
+                23,
+                24,
+                1,
+                2,
+                3,
+                4,
+                5,
+                6,
+                7,
+                8
+            ]
+        }
+    },
+    {
+        "model": "auth.user",
+        "pk": 1,
+        "fields": {
+            "password": "pbkdf2_sha256$150000$JAgmdpXG7ISU$O9Ha9PD0LNqt60VIiKhA42BAK41MGvK9v06vb0BvgSo=",
+            "last_login": null,
+            "is_superuser": true,
+            "username": "employee",
+            "first_name": "Employee",
+            "last_name": "User",
+            "email": "employee@yellenge.nl",
+            "is_staff": true,
+            "is_active": true,
+            "date_joined": "2010-09-30T21:09:32Z",
+            "groups": [1],
+            "user_permissions": []
+        }
+    },
+    {
+        "model": "auth.user",
+        "pk": 2,
+        "fields": {
+            "password": "pbkdf2_sha256$150000$odMbJGInrove$1BCw70xJ1r07/T3UABQmvArNjXD376+qj/74iXtnkZ8=",
+            "last_login": null,
+            "is_superuser": true,
+            "username": "employer",
+            "first_name": "Employer",
+            "last_name": "User",
+            "email": "employer@yellenge.nl",
+            "is_staff": true,
+            "is_active": true,
+            "date_joined": "2010-09-30T21:09:32Z",
+            "groups": [2],
+            "user_permissions": []
+        }
+    },
+    {
+        "model": "auth.user",
+        "pk": 3,
+        "fields": {
+            "password": "pbkdf2_sha256$150000$g0EZTqGrhsyp$OaY7BZrlwRrg4nv7GWrjQGWV46PUxzylnCcM+hLaNys=" ,
+            "last_login": null,
+            "is_superuser": false,
+            "username": "nonuser",
+            "first_name": "Nonuser",
+            "last_name": "User",
+            "email": "nonuser@yellenge.nl",
+            "is_staff": false,
+            "is_active": true,
+            "date_joined": "2010-09-30T21:09:32Z",
+            "groups": [],
+            "user_permissions": []
+        }
+    }
+]
