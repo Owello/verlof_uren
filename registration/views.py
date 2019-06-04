@@ -53,6 +53,7 @@ class LeaveRegistrationCreate(PermissionRequiredMixin, CreateView):
     template_name = 'registration/leaveregistration_create.html'
     model = LeaveRegistration
     form_class = LeaveRegistrationForm
+    login_url = reverse_lazy('login')
 
     def get_form_kwargs(self, *args, **kwargs):
         kwargs = super(LeaveRegistrationCreate, self).get_form_kwargs()

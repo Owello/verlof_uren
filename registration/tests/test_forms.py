@@ -37,6 +37,10 @@ class LeaveRegistrationFormTest(TestCase):
         form.cleaned_data = cleaned_data
         self.assertRaisesMessage(ValidationError, "Dit jaar is (nog) niet beschikbaar", form.clean)
 
+
+
+"""test more clean without from_date and end_date"""
+
 class EntitlementFormTest(TestCase):
     def test_entitlement_form_clean_data_ok(self):
         cleaned_data = {"year": 2019}

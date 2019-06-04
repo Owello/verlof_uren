@@ -148,6 +148,8 @@ class EntitlementDetailTests(TestCase):
         self.assertQuerysetEqual(response.context_data['all_entitlements'], [repr(entitlement)])
         self.assertQuerysetEqual(response.context_data['all_leave_registrations'], [repr(leaveregistration)])
         self.assertContains(response, '<tr>', count=7)
+        self.assertContains(response, 'href="/leave_registration/1/update')
+        self.assertContains(response, 'href="/leave_registration/1/delete')
 
     def test_two_leaveregistrations(self):
         self.client.login(username='employer', password='employeremployer')
@@ -174,3 +176,48 @@ class EntitlementDetailTests(TestCase):
                                  [repr(leaveregistration1), repr(leaveregistration2), repr(leaveregistration3)],
                                  ordered=False)
         self.assertContains(response, '<tr>', count=9)
+
+
+class LeaveRegistrationCreateTests(TestCase):
+    fixtures = ['users.json']
+
+    def test_not_logged_in(self):
+        response = self.client.get(reverse('leave-registration-create'))
+        self.assertEqual(response.status_code, 302)
+        self.assertRedirects(response, '/login/?next=/leave_registration/create')
+
+    def test_logged_in_no_permission(self):
+        self.client.login(username='nonuser', password='nonusernonuser')
+        response = self.client.get(reverse('leave-registration-create'))
+        self.assertEqual(response.status_code, 403)
+
+    def test_logged_in_has_permission(self):
+        self.client.login(username='employee', password='employeeemployee')
+        response = self.client.get(reverse('leave-registration-create'))
+        self.assertEqual(response.status_code, 200)
+
+    def test_logged_in_has_permission_no_entitlement(self):
+        self.client.login(username='employee', password='employeeemployee')
+        today = '2019-01-01'
+        response = self.client.post(reverse('leave-registration-create'),
+                                    {'from_date': today, 'end_date': today, 'amount_of_hours': '8'})
+        self.assertEqual(response.status_code, 200)
+        self.assertFormError(response, 'form', None, "Dit jaar is (nog) niet beschikbaar")
+
+    def test_logged_in_wrong_year(self):
+        self.client.login(username='employee', password='employeeemployee')
+        today = '2019-01-01'
+        mommy.make(Entitlement, year=2018, user=User.objects.get(username='employee'))
+        response = self.client.post(reverse('leave-registration-create'),
+                                    {'from_date': today, 'end_date': today, 'amount_of_hours': '8'})
+        self.assertEqual(response.status_code, 200)
+        self.assertFormError(response, 'form', None, "Dit jaar is (nog) niet beschikbaar")
+
+    def test_logged_in_all_correct(self):
+        self.client.login(username='employee', password='employeeemployee')
+        today = '2019-01-01'
+        mommy.make(Entitlement, year=2019, user=User.objects.get(username='employee'))
+        response = self.client.post(reverse('leave-registration-create'),
+                                    {'from_date': today, 'end_date': today, 'amount_of_hours': '8'})
+        self.assertEqual(response.status_code, 302)
+        self.assertRedirects(response, '/entitlement/2019')
