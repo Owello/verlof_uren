@@ -1,4 +1,3 @@
-from datetime import datetime
 from unittest import mock
 
 from django.contrib.auth.models import User
@@ -7,6 +6,7 @@ from django.urls import reverse
 from model_mommy import mommy
 
 from registration.models import Entitlement, LeaveRegistration
+from registration.views import Index
 
 
 class HomePageTests(TestCase):
@@ -37,21 +37,20 @@ class HomePageTests(TestCase):
                                 '<h3 class="ui center aligned header">Er zijn nog geen gegevens beschikbaar.</h3>')
 
     def test_entitlement_current(self):
-        with mock.patch("registration.context_processors.default_entitlement") as mock_default_entitlement:
+        with mock.patch.object(Index, 'get_context_data') as get_context_data:
             entitlement = mommy.make(Entitlement, year=2019)
-            mock_default_entitlement.return_value = {'default_entitlement': entitlement}
+            get_context_data.return_value = {'default_entitlement': entitlement}
             self.client.login(username='employer', password='employeremployer')
             response = self.client.get(reverse('index'))
-            self.assertContains(response,
-                                '<a class="massive fluid ui green basic button"')
+            self.assertContains(response, '<a class="massive fluid ui green basic button"')
             self.assertContains(response, 'href="/entitlement/2019"')
             self.assertContains(response, 'href="/logout')
             self.assertContains(response, 'href="/password_change/')
 
     def test_entitlement_last_year(self):
-        with mock.patch("registration.context_processors.default_entitlement") as mock_default_entitlement:
+        with mock.patch.object(Index, 'get_context_data') as get_context_data:
             entitlement = mommy.make(Entitlement, year=2018)
-            mock_default_entitlement.return_value = {'default_entitlement': entitlement}
+            get_context_data.return_value = {'default_entitlement': entitlement}
             self.client.login(username='employer', password='employeremployer')
             response = self.client.get(reverse('index'))
             self.assertContains(response, '<a class="massive fluid ui green basic button"')
@@ -103,13 +102,13 @@ class EntitlementListTests(TestCase):
     def test_three_entitlement(self):
         self.client.login(username='employer', password='employeremployer')
         user = User.objects.get(username='employer')
-        entitlement1 = mommy.make(Entitlement, user=user)
-        entitlement2 = mommy.make(Entitlement, user=user)
         entitlement3 = mommy.make(Entitlement, user=user)
+        entitlement4 = mommy.make(Entitlement, user=user)
+        entitlement5 = mommy.make(Entitlement, user=user)
         response = self.client.get(reverse('entitlement-list'))
         self.assertEqual(response.status_code, 200)
         self.assertQuerysetEqual(response.context_data['all_entitlements'],
-                                 [repr(entitlement1), repr(entitlement2), repr(entitlement3)], ordered=False)
+                                 [repr(entitlement3), repr(entitlement4), repr(entitlement5)], ordered=False)
         self.assertContains(response, '<tr>', count=4)
 
 
