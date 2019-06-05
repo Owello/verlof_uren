@@ -80,6 +80,7 @@ class LeaveRegistrationUpdate(PermissionRequiredMixin, UpdateView):
     template_name = 'registration/leaveregistration_update.html'
     model = LeaveRegistration
     form_class = LeaveRegistrationForm
+    login_url = reverse_lazy('login')
 
     def get_form_kwargs(self, *args, **kwargs):
         kwargs = super(LeaveRegistrationUpdate, self).get_form_kwargs()

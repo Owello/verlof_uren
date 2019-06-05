@@ -27,7 +27,7 @@ class LeaveRegistrationForm(ModelForm):
         from_date = self.cleaned_data.get('from_date')
         end_date = self.cleaned_data.get('end_date')
         if not isinstance(from_date, datetime.date) or not isinstance(end_date, datetime.date):
-            raise forms.ValidationError("Vul een geldige datum in")
+            raise forms.ValidationError("Vul een geldige datum in.")
         from_year = from_date.year
         end_year = end_date.year
         if from_year != end_year:

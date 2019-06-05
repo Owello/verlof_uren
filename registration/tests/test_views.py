@@ -1,3 +1,4 @@
+import datetime
 from unittest import mock
 
 from django.contrib.auth.models import User
@@ -6,7 +7,7 @@ from django.urls import reverse
 from model_mommy import mommy
 
 from registration.models import Entitlement, LeaveRegistration
-from registration.views import Index
+from registration.views import Index, LeaveRegistrationCreate, LeaveRegistrationUpdate
 
 
 class HomePageTests(TestCase):
@@ -194,6 +195,7 @@ class LeaveRegistrationCreateTests(TestCase):
         self.client.login(username='employee', password='employeeemployee')
         response = self.client.get(reverse('leave-registration-create'))
         self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, 'registration/leaveregistration_create.html')
 
     def test_logged_in_has_permission_no_entitlement(self):
         self.client.login(username='employee', password='employeeemployee')
@@ -201,7 +203,8 @@ class LeaveRegistrationCreateTests(TestCase):
         response = self.client.post(reverse('leave-registration-create'),
                                     {'from_date': today, 'end_date': today, 'amount_of_hours': '8'})
         self.assertEqual(response.status_code, 200)
-        self.assertFormError(response, 'form', None, "Dit jaar is (nog) niet beschikbaar")
+        self.assertContains(response, 'Dit jaar is (nog) niet beschikbaar')
+        self.assertTemplateUsed(response, 'registration/leaveregistration_create.html')
 
     def test_logged_in_wrong_year(self):
         self.client.login(username='employee', password='employeeemployee')
@@ -210,9 +213,46 @@ class LeaveRegistrationCreateTests(TestCase):
         response = self.client.post(reverse('leave-registration-create'),
                                     {'from_date': today, 'end_date': today, 'amount_of_hours': '8'})
         self.assertEqual(response.status_code, 200)
-        self.assertFormError(response, 'form', None, "Dit jaar is (nog) niet beschikbaar")
+        self.assertContains(response, "Dit jaar is (nog) niet beschikbaar")
+        self.assertTemplateUsed(response, 'registration/leaveregistration_create.html')
 
-    def test_logged_in_all_correct(self):
+    def test_logged_in_end_date_before_from_date(self):
+        self.client.login(username='employee', password='employeeemployee')
+        today = '2019-01-02'
+        yesterday = '2019-01-01'
+        mommy.make(Entitlement, year=2019, user=User.objects.get(username='employee'))
+        response = self.client.post(reverse('leave-registration-create'),
+                                    {'from_date': today, 'end_date': yesterday, 'amount_of_hours': '8'})
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, "De einddatum ligt voor de begindatum")
+        self.assertTemplateUsed(response, 'registration/leaveregistration_create.html')
+
+    def test_logged_in_2_different_years(self):
+        self.client.login(username='employee', password='employeeemployee')
+        today = '2019-01-01'
+        yesterday = '2018-12-31'
+        mommy.make(Entitlement, year=2018, user=User.objects.get(username='employee'))
+        mommy.make(Entitlement, year=2019, user=User.objects.get(username='employee'))
+        response = self.client.post(reverse('leave-registration-create'),
+                                    {'from_date': yesterday, 'end_date': today, 'amount_of_hours': '8'})
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response,
+                            "Je kan voor 1 kalenderjaar tegelijk invullen. Zorg dat begin- en einddatum \
+                            in het zelfde jaar liggen.")
+        self.assertTemplateUsed(response, 'registration/leaveregistration_create.html')
+
+    def test_logged_in_wrong_format(self):
+        self.client.login(username='employee', password='employeeemployee')
+        today = 'today'
+        mommy.make(Entitlement, year=2018, user=User.objects.get(username='employee'))
+        response = self.client.post(reverse('leave-registration-create'),
+                                    {'from_date': today, 'end_date': today, 'amount_of_hours': '8'})
+        self.assertEqual(response.status_code, 200)
+        self.assertFormError(response, 'form', None,
+                             "Vul een geldige datum in.")
+        self.assertTemplateUsed(response, 'registration/leaveregistration_create.html')
+
+    def test_logged_in_all_correct_2019(self):
         self.client.login(username='employee', password='employeeemployee')
         today = '2019-01-01'
         mommy.make(Entitlement, year=2019, user=User.objects.get(username='employee'))
@@ -220,3 +260,158 @@ class LeaveRegistrationCreateTests(TestCase):
                                     {'from_date': today, 'end_date': today, 'amount_of_hours': '8'})
         self.assertEqual(response.status_code, 302)
         self.assertRedirects(response, '/entitlement/2019')
+
+    def test_logged_in_all_correct_2018(self):
+        self.client.login(username='employee', password='employeeemployee')
+        today = '2018-01-01'
+        mommy.make(Entitlement, year=2018, user=User.objects.get(username='employee'))
+        response = self.client.post(reverse('leave-registration-create'),
+                                    {'from_date': today, 'end_date': today, 'amount_of_hours': '8'})
+        self.assertEqual(response.status_code, 302)
+        self.assertRedirects(response, '/entitlement/2018')
+
+    def test_get_form_kwargs(self):
+        user = mommy.make(User)
+        mommy.make(Entitlement, year=2019, user=user)
+        mommy.make(Entitlement, year=2018, user=user)
+        mommy.make(Entitlement, year=2020, user=user)
+        leave_registration_view = LeaveRegistrationCreate()
+        leave_registration_view.request = mock.Mock()
+        leave_registration_view.request.user = user
+        result = leave_registration_view.get_form_kwargs()
+        self.assertCountEqual(result['years'], [2018, 2019, 2020])
+
+
+class LeaveRegistrationUpdateTests(TestCase):
+    fixtures = ['users.json']
+
+    def test_not_logged_in(self):
+        response = self.client.get(reverse('leave-registration-update', kwargs={'pk': 3}))
+        self.assertEqual(response.status_code, 302)
+        self.assertRedirects(response, '/login/?next=/leave_registration/3/update')
+
+    def test_logged_in_no_permission(self):
+        self.client.login(username='nonuser', password='nonusernonuser')
+        response = self.client.get(reverse('leave-registration-update', kwargs={'pk': 4}))
+        self.assertEqual(response.status_code, 403)
+
+    def test_logged_in_leave_registration_other_user(self):
+        self.client.login(username='employer', password='employeremployer')
+        user = User.objects.get(username='employee')
+        today = datetime.datetime.now()
+        entitlement = mommy.make(Entitlement, user=user, year=2019)
+        mommy.make(LeaveRegistration, pk=4, from_date=today, end_date=today, amount_of_hours=8,
+                   entitlement=entitlement)
+        response = self.client.get(reverse('leave-registration-update', kwargs={'pk': 4}))
+        self.assertEqual(response.status_code, 404)
+
+    def test_logged_in_no_leave_registration(self):
+        self.client.login(username='employer', password='employeremployer')
+        user = User.objects.get(username='employer')
+        mommy.make(Entitlement, user=user, year=2019)
+        response = self.client.get(reverse('leave-registration-update', kwargs={'pk': 4}))
+        self.assertEqual(response.status_code, 404)
+
+    def test_logged_in_has_permission(self):
+        self.client.login(username='employer', password='employeremployer')
+        user = User.objects.get(username='employer')
+        today = datetime.datetime.now()
+        entitlement = mommy.make(Entitlement, user=user, year=2019)
+        mommy.make(LeaveRegistration, pk=4, from_date=today, end_date=today, amount_of_hours=8,
+                   entitlement=entitlement)
+        response = self.client.get(reverse('leave-registration-update', kwargs={'pk': 4}))
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, 'registration/leaveregistration_update.html')
+
+    def test_get_form_kwargs(self):
+        user = mommy.make(User)
+        mommy.make(Entitlement, year=2019, user=user)
+        mommy.make(Entitlement, year=2018, user=user)
+        leave_registration_view = LeaveRegistrationUpdate()
+        leave_registration_view.request = mock.Mock()
+        leave_registration_view.request.user = user
+        result = leave_registration_view.get_form_kwargs()
+        self.assertCountEqual(result['years'], [2018, 2019])
+
+    def test_has_permission_no_entitlement(self):
+        self.client.login(username='employee', password='employeeemployee')
+        today = '2019-01-01'
+        response = self.client.post(reverse('leave-registration-update', kwargs={'pk': 4}),
+                                    {'from_date': today, 'end_date': today, 'amount_of_hours': '8'})
+        self.assertEqual(response.status_code, 404)
+
+    def test_wrong_year(self):
+        self.client.login(username='employee', password='employeeemployee')
+        new_date = '2018-01-01'
+        entitlement = mommy.make(Entitlement, year=2019, user=User.objects.get(username='employee'))
+        mommy.make(LeaveRegistration, pk=4, from_date=new_date, end_date=new_date, amount_of_hours=8,
+                   entitlement=entitlement)
+        response = self.client.post(reverse('leave-registration-update', kwargs={'pk': 4}),
+                                    {'from_date': new_date, 'end_date': new_date, 'amount_of_hours': '8'})
+        self.assertEqual(response.status_code, 200)
+        self.assertFormError(response, 'form', None, "Dit jaar is (nog) niet beschikbaar")
+        self.assertTemplateUsed(response, 'registration/leaveregistration_update.html')
+
+    def test_logged_in_end_date_before_from_date(self):
+        self.client.login(username='employee', password='employeeemployee')
+        today = '2019-01-02'
+        yesterday = '2019-01-01'
+        entitlement = mommy.make(Entitlement, year=2019, user=User.objects.get(username='employee'))
+        mommy.make(LeaveRegistration, pk=4, from_date=today, end_date=today, amount_of_hours=8,
+                   entitlement=entitlement)
+        response = self.client.post(reverse('leave-registration-update', kwargs={'pk': 4}),
+                                    {'from_date': today, 'end_date': yesterday, 'amount_of_hours': '8'})
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, "De einddatum ligt voor de begindatum")
+        self.assertTemplateUsed(response, 'registration/leaveregistration_update.html')
+
+    def test_logged_in_2_different_years(self):
+        self.client.login(username='employee', password='employeeemployee')
+        today = '2019-01-01'
+        yesterday = '2018-12-31'
+        mommy.make(Entitlement, year=2018, user=User.objects.get(username='employee'))
+        entitlement = mommy.make(Entitlement, year=2019, user=User.objects.get(username='employee'))
+        mommy.make(LeaveRegistration, pk=4, from_date=today, end_date=today, amount_of_hours=8,
+                   entitlement=entitlement)
+        response = self.client.post(reverse('leave-registration-update', kwargs={'pk': 4}),
+                                    {'from_date': yesterday, 'end_date': today, 'amount_of_hours': '8'})
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response,
+                            "Je kan voor 1 kalenderjaar tegelijk invullen. Zorg dat begin- en einddatum \
+                            in het zelfde jaar liggen.")
+        self.assertTemplateUsed(response, 'registration/leaveregistration_update.html')
+
+    def test_logged_in_wrong_format(self):
+        self.client.login(username='employee', password='employeeemployee')
+        today = 'today'
+        entitlement = mommy.make(Entitlement, year=2018, user=User.objects.get(username='employee'))
+        mommy.make(LeaveRegistration, pk=4, from_date='2019-01-01', end_date='2019-01-01', amount_of_hours=8,
+                   entitlement=entitlement)
+        response = self.client.post(reverse('leave-registration-update', kwargs={'pk': 4}),
+                                    {'from_date': today, 'end_date': today, 'amount_of_hours': '8'})
+        self.assertEqual(response.status_code, 200)
+        self.assertFormError(response, 'form', None,
+                             "Vul een geldige datum in.")
+        self.assertTemplateUsed(response, 'registration/leaveregistration_update.html')
+
+    def test_logged_in_all_correct_2019(self):
+        self.client.login(username='employee', password='employeeemployee')
+        today = '2019-01-01'
+        entitlement = mommy.make(Entitlement, year=2019, user=User.objects.get(username='employee'))
+        mommy.make(LeaveRegistration, pk=4, from_date='2019-01-01', end_date='2019-01-01', amount_of_hours=8,
+                   entitlement=entitlement)
+        response = self.client.post(reverse('leave-registration-update', kwargs={'pk': 4}),
+                                    {'from_date': today, 'end_date': today, 'amount_of_hours': '8'})
+        self.assertEqual(response.status_code, 302)
+        self.assertRedirects(response, '/entitlement/2019')
+
+    def test_logged_in_all_correct_2018(self):
+        self.client.login(username='employee', password='employeeemployee')
+        today = '2018-01-01'
+        entitlement = mommy.make(Entitlement, year=2018, user=User.objects.get(username='employee'))
+        mommy.make(LeaveRegistration, pk=4, from_date='2018-01-01', end_date='2018-01-01', amount_of_hours=8,
+                   entitlement=entitlement)
+        response = self.client.post(reverse('leave-registration-update', kwargs={'pk': 4}),
+                                    {'from_date': today, 'end_date': today, 'amount_of_hours': '8'})
+        self.assertEqual(response.status_code, 302)
+        self.assertRedirects(response, '/entitlement/2018')
