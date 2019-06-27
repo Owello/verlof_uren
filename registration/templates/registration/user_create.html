@@ -3,12 +3,12 @@
 {% block title %}Gebruiker aanmaken{% endblock %}
 
 {% block content %}
-    <h1 class="ui center aligned header">maak een nieuwe gebruiker aan</h1>
+    <h1 class="ui center aligned header">Maak een nieuwe gebruiker aan</h1>
 
     <form class="ui form" method="post">
         {% csrf_token %}
         {{ form.as_p }}
-         <button class="ui button" type="submit">Voeg toe</button>
+         <button class="ui primary button" type="submit">Voeg toe</button>
     </form>
 
 {% endblock %}

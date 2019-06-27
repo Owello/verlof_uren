@@ -243,7 +243,7 @@ class AdminEntitlementDelete(PermissionRequiredMixin, DeleteView):
 
 class AdminLeaveRegistrationCreate(PermissionRequiredMixin, CreateView):
     permission_required = ('auth.view_user', 'registration.add_leaveregistration')
-    template_name = 'registration/leaveregistration_create.html'
+    template_name = 'registration/admin_leaveregistration_create.html'
     model = LeaveRegistration
     form_class = LeaveRegistrationForm
 

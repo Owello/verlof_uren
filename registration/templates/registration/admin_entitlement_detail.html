@@ -15,7 +15,7 @@
             <td>{{ entitlement.year }}</td>
         </tr>
         <tr>
-            <td>Verlofuren</td>
+            <td>Verlofsaldo</td>
             <td>{{ entitlement.leave_hours }}</td>
         </tr>
         <tr>
@@ -29,8 +29,8 @@
         </tbody>
     </table>
 
-    <h1 class="ui center aligned header">Opgenomen of ingeplande verlofuren</h1>
-    <a class=" ui blue button" href="{% url 'admin-leaveregistration-create' user_id=user_id %}">Voeg opgenomen uren toe</a>
+    <h1 class="ui center aligned header">Opgenomen of ingepland verlof</h1>
+    <a class=" ui blue button" href="{% url 'admin-leaveregistration-create' user_id=user_id %}">Verlof toevoegen</a>
     <table class="ui celled table">
         <thead>
         <tr>

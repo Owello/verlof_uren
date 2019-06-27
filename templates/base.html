@@ -9,32 +9,13 @@
             Untitled Document
         {% endblock title %}
     </title>
-    <link href="{% static 'main.css' %}" rel="stylesheet" type="text/css">
     <link rel="shortcut icon" href="{% static '' %}"/>
-    <script src="https://code.jquery.com/jquery-3.1.1.min.js" crossorigin="anonymous"></script>
+
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/semantic-ui@2.4.2/dist/semantic.min.css">
+    <link href="{% static 'main.css' %}" rel="stylesheet" type="text/css">
+
+    <script src="https://code.jquery.com/jquery-3.1.1.min.js" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/semantic-ui@2.4.2/dist/semantic.min.js"></script>
-    <style type="text/css">
-        body {
-            background-color: #FFFFFF;
-        }
-
-        .ui.menu .item img.logo {
-            margin-right: 1.5em;
-        }
-
-        .main.container {
-            margin-top: 7em;
-        }
-
-        {#.wireframe {#}
-        {#    margin-top: 2em;#}
-        {#/}#}
-
-        .ui.footer.segment {
-            margin: 5em 0 0;
-        }
-    </style>
 </head>
 <body>
 <div class="ui fixed inverted menu">
@@ -42,13 +23,28 @@
         <a href="#" class="header item">
             <img class="logo" src="{% static 'Yellenge_logo_no_gradient.svg' %}" alt=""/>
         </a>
-        <div class="header item">
-            {% if user.is_authenticated %}
-                <p> Welkom {{ request.user.username }} </p>
-            {% else %}
-                <p> Niet ingelogd </p>
+        {% if user.is_authenticated %}
+            <div class="header item">Welkom {{ request.user.username }}</div>
+            <a class="item" href="{% url 'index' %}">
+                <i class="home icon"></i>Welkom
+            </a>
+            <a class="item" href="{% url 'entitlement-list' %}">
+                <i class="calendar alternate outline icon"></i>Alle jaren
+            </a>
+            {% if default_entitlement %}
+                <a class="item" href="{% url 'entitlement-detail' year=default_entitlement.year %}">
+                    <i class="home icon"></i>Overzicht per jaar
+                </a>
+                <a class="item" href="{% url 'leave-registration-create' %}">
+                    <i class="plus icon"></i>Verlof invoeren
+                </a>
             {% endif %}
-        </div>
+            <a class="item" href="{% url 'logout' %}?next=/">
+                <i class="sign-out icon"></i>Log out
+            </a>
+        {% else %}
+            <div class="header item">Niet ingelogd</div>
+        {% endif %}
     </div>
 </div>
 
@@ -56,31 +52,17 @@
     {% block menu %}
         {% if user.is_authenticated and default_entitlement %}
             {% if perms.auth.change_user %}
-            <div class="ui three item menu">
-                <a class="item" href=/admin>Admin</a>
-                <a class="item" href="{% url 'user-list' %}">Gebruikers</a>
-            </div>
+                <div class="ui three item menu">
+                    <a class="item" href="{% url 'admin-users-entitlement-list' year=default_entitlement.year %}">Admin</a>
+                    <a class="item" href="{% url 'user-list' %}">Gebruikers</a>
+                    <a class="item" href=/admin>Django Admin</a>
+                </div>
             {% endif %}
-            <div class="ui five item menu">
-                <a class="item" href="{% url 'index' %}">Welkom</a>
-                <a class="item" href="{% url 'entitlement-list' %}"><i class="calendar alternate outline icon"></i>Verlofsaldo
-                    alle jaren</a>
-                <a class="item" href="{% url 'entitlement-detail' year=default_entitlement.year %}"><i
-                        class="home icon"></i>Overzicht per jaar</a>
-                <a class="item" href="{% url 'leave-registration-create' %}"><i class="pencil icon"></i>Invoeren opgenomen verlofuren</a>
-                <a class="active item" href="{% url 'logout' %}?next=/"><i class="sign-out icon"></i>Log out</a>
-
-            </div>
         {% endif %}
     {% endblock %}
     {% block content %}{% endblock %}
 </div>
 
-<div class="ui inverted vertical footer segment">
-    <div class="ui center aligned container">
-        &nbsp;
-    </div>
-</div>
 {% block js %}{% endblock %}
 </body>
 </html>

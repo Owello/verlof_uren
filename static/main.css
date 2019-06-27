@@ -1,0 +1,24 @@
+body {
+  background-color: #FFFFFF;
+}
+
+.ui.menu .item img.logo {
+  margin-right: 1.5em;
+}
+
+.main.container {
+  padding-top: 7em;
+}
+
+.ui.footer.segment {
+  margin: 5em 0 0;
+}
+
+.helptext {
+  color: #999;
+}
+
+.errorlist.nonfield {
+  background: #FF0000;
+  font-weight: bold;
+}

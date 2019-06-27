@@ -14,7 +14,8 @@ urlpatterns = [
     path('leave_registration/<int:pk>/delete', LeaveRegistrationDelete.as_view(),
          name='leave-registration-delete'),
     path('entitlement_list', EntitlementList.as_view(), name='entitlement-list'),
-    path('useradmin', UserList.as_view(), name='user-list'),
+    path('useradmin/<int:year>', AdminUsersEntitlementList.as_view(),
+         name='admin-users-entitlement-list'),
     path('useradmin/createuser', UserCreate.as_view(), name='user-create'),
     path('useradmin/<int:pk>/update', UserUpdate.as_view(), name='user-update'),
     path('useradmin/<int:pk>/delete', UserDelete.as_view(), name='user-delete'),
@@ -34,7 +35,7 @@ urlpatterns = [
          name='admin-leaveregistration-update'),
     path('useradmin/leave_registration/<int:pk>/delete', AdminLeaveRegistrationDelete.as_view(),
          name='admin-leaveregistration-delete'),
-    path('useradmin/users/entitlement/list/<int:year>', AdminUsersEntitlementList.as_view(),
-         name='admin-users-entitlement-list'),
+    path('useradmin/users/', UserList.as_view(),
+         name='user-list'),
     path('', views.Index.as_view(), name='index')
 ]

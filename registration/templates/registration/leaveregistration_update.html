@@ -8,7 +8,7 @@
     <form class="ui form" method="post">
         {% csrf_token %}
         {{ form.as_p }}
-        <button class="ui button" type="submit">Opslaan</button>
+        <button class="ui primary button" type="submit">Opslaan</button>
         <a class="ui button" href="{% url 'entitlement-detail' year=object.from_date.year %}">Annuleren</a>
     </form>
 
