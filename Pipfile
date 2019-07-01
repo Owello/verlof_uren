@@ -11,6 +11,7 @@ django-debug-toolbar = "*"
 coverage = "*"
 model-mommy = "*"
 django-csp = "*"
+raven = "*"
 
 [requires]
 python_version = "3.7"

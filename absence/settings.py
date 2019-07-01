@@ -25,8 +25,6 @@ INSTALLED_APPS = [
     'registration.apps.RegistrationConfig',
     'authentication.apps.AuthenticationConfig',
 
-    'debug_toolbar',
-
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -45,7 +43,6 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'debug_toolbar.middleware.DebugToolbarMiddleware',
 ]
 
 CSP_CONFIGURATION = {
@@ -107,7 +104,7 @@ if IS_TEST:
     INSTALLED_APPS.remove('debug_toolbar')
     MIDDLEWARE.remove('debug_toolbar.middleware.DebugToolbarMiddleware')
 
-ROOT_URLCONF = 'verlof_uren.urls'
+ROOT_URLCONF = 'absence.urls'
 
 TEMPLATES = [
     {
@@ -126,7 +123,7 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'verlof_uren.wsgi.application'
+WSGI_APPLICATION = 'absence.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/2.1/ref/settings/#databases
@@ -179,6 +176,13 @@ STATICFILES_DIRS = [
 
 LOGIN_REDIRECT_URL = 'index'
 
+
+try:
+    from .settings_local import *
+except ImportError as e:
+    print("Importing local_settings.py causes exception: " + str(e))
+
+
 CSP_TARGETS = {
     'cms': csp(['default', 'unsafe', 'semantic', 'log', 'googleFonts']),
 }
@@ -200,10 +204,9 @@ CSP_FORM_ACTION = CSP_TARGETS['cms'].get('form-action')
 CSP_SANDBOX = CSP_TARGETS['cms'].get('sandbox')
 CSP_REPORT_URI = CSP_TARGETS['cms'].get('report-uri')
 
-
 RAVEN_CONFIG = {
     'dsn': 'https://27d84714ae7f427dab790afdf36e7fa3:e31bf59f582a4ab098b2a5aa72a6402d@log.owello.nl/11',
     # If you are using git, you can also automatically configure the
     # release based on the git info.
-    'release': raven.fetch_git_sha(os.path.dirname(os.pardir)),
+    'release': raven.fetch_git_sha(os.path.abspath(os.curdir)),
 }
