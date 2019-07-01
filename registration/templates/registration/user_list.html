@@ -14,8 +14,7 @@
             <tr>
                 <th>ID</th>
                 <th>Gebruikersnaam</th>
-                <th>Voornaam</th>
-                <th>Achternaam</th>
+                <th>Naam</th>
                 <th>E-mail adres</th>
                 <th>Laatste Inlog</th>
                 <th>Gebruiker aanpassen</th>
@@ -28,8 +27,7 @@
             <tr>
                 <td>{{ user.id}} </td>
                 <td>{{ user.username }}</td>
-                <td>{{ user.first_name }}</td>
-                <td>{{ user.last_name }}</td>
+                <td>{{ user.get_full_name }}</td>
                 <td>{{ user.email }}</td>
                 <td>{{ user.last_login|date:"SHORT_DATE_FORMAT" }}</td>
                 <td>

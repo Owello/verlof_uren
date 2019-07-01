@@ -1,5 +1,6 @@
 import os
 import sys
+import raven
 
 IS_TEST = sys.argv[1] == 'test'
 
@@ -32,9 +33,11 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'raven.contrib.django.raven_compat',
 ]
 
 MIDDLEWARE = [
+    'csp.middleware.CSPMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -44,6 +47,61 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'debug_toolbar.middleware.DebugToolbarMiddleware',
 ]
+
+CSP_CONFIGURATION = {
+    'default': {
+        'default-src': ["'none'"],
+        'img-src': ["'self'", 'data:'],
+        'font-src': ["'self'"],
+        'style-src': ["'self'"],
+        'script-src': ["'self'"],
+        'object-src': ["'none'"],
+        'media-src': ["'self'"],
+        'prefetch-src': ["'self'"],
+        'connect-src': ["'self'"],
+        'frame-ancestors': ["'self'"],
+        'base-uri': ["'self'"],
+        'form-action': ["'self'"],
+        'report-uri': 'https://log.owello.nl/api/11/csp-report/?sentry_key=27d84714ae7f427dab790afdf36e7fa3'
+    },
+    'unsafe': {
+        'style-src': ["'unsafe-inline'"],
+        'script-src': ["'unsafe-inline'", "'unsafe-eval'"],
+    },
+    'semantic': {
+        'style-src': ['https://cdn.jsdelivr.net/npm/semantic-ui@2.4.2/dist/semantic.min.css'],
+        'script-src': ['https://code.jquery.com/jquery-3.1.1.min.js', 'https://cdn.jsdelivr.net/npm/semantic-ui@2.4.2/dist/semantic.min.js'],
+        'font-src': ['data:', 'https://cdn.jsdelivr.net/npm/semantic-ui@2.4.2/dist/themes/default/assets/fonts/'],
+    },
+    'log': {
+        'connect-src': ['log.owello.nl'],
+        'img-src': ['log.owello.nl'],
+    },
+    'googleFonts': {
+        'font-src': ['fonts.gstatic.com'],
+        'style-src': ['fonts.googleapis.com'],
+    },
+}
+
+
+def csp(items=None):
+    csp_result = {}
+    if items is None:
+        items = CSP_CONFIGURATION.keys()
+    for item in items:
+        for csp_item, csp_values in CSP_CONFIGURATION[item].items():
+            if isinstance(csp_values, list):
+                if csp_item not in csp_result:
+                    csp_result[csp_item] = []
+                csp_result[csp_item] += csp_values
+            else:
+                csp_result[csp_item] = csp_values
+    # Remove duplicate values
+    for key, value in csp_result.items():
+        if isinstance(value, list):
+            csp_result[key] = list(set(value))
+    return csp_result
+
 
 if IS_TEST:
     INSTALLED_APPS.remove('debug_toolbar')
@@ -120,3 +178,32 @@ STATICFILES_DIRS = [
 ]
 
 LOGIN_REDIRECT_URL = 'index'
+
+CSP_TARGETS = {
+    'cms': csp(['default', 'unsafe', 'semantic', 'log', 'googleFonts']),
+}
+
+CSP_DEFAULT_SRC = CSP_TARGETS['cms'].get('default-src')
+CSP_SCRIPT_SRC = CSP_TARGETS['cms'].get('script-src')
+CSP_IMG_SRC = CSP_TARGETS['cms'].get('img-src')
+CSP_OBJECT_SRC = CSP_TARGETS['cms'].get('object-src')
+CSP_MEDIA_SRC = CSP_TARGETS['cms'].get('media-src')
+CSP_PREFETCH_SRC = CSP_TARGETS['cms'].get('prefetch-src')
+CSP_FRAME_SRC = CSP_TARGETS['cms'].get('frame-src')
+CSP_FONT_SRC = CSP_TARGETS['cms'].get('font-src')
+CSP_CONNECT_SRC = CSP_TARGETS['cms'].get('connect-src')
+CSP_STYLE_SRC = CSP_TARGETS['cms'].get('style-src')
+CSP_BASE_URI = CSP_TARGETS['cms'].get('base-uri')
+CSP_CHILD_SRC = CSP_TARGETS['cms'].get('child-src')
+CSP_FRAME_ANCESTORS = CSP_TARGETS['cms'].get('frame-ancestors')
+CSP_FORM_ACTION = CSP_TARGETS['cms'].get('form-action')
+CSP_SANDBOX = CSP_TARGETS['cms'].get('sandbox')
+CSP_REPORT_URI = CSP_TARGETS['cms'].get('report-uri')
+
+
+RAVEN_CONFIG = {
+    'dsn': 'https://27d84714ae7f427dab790afdf36e7fa3:e31bf59f582a4ab098b2a5aa72a6402d@log.owello.nl/11',
+    # If you are using git, you can also automatically configure the
+    # release based on the git info.
+    'release': raven.fetch_git_sha(os.path.dirname(os.pardir)),
+}
