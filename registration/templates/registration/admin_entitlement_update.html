@@ -5,11 +5,8 @@
 {% block content %}
     <h1 class="ui center aligned header">Wijzig verlofuren</h1>
 
-    <a class="ui huge blue label">
-    {{ object.user }}
-    </a>
-    <a class="ui huge olive label">
-    {{ object.year }}
+    <a class="ui huge olive inverted tag label">
+    {{ object.user }}  -      {{ object.year }}
     </a>
     <form class="ui form" method="post">
         {% csrf_token %}

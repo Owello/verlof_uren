@@ -1,6 +1,6 @@
 import os
 import sys
-import raven
+
 
 IS_TEST = sys.argv[1] == 'test'
 
@@ -31,7 +31,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'raven.contrib.django.raven_compat',
+
 ]
 
 MIDDLEWARE = [
@@ -204,9 +204,4 @@ CSP_FORM_ACTION = CSP_TARGETS['cms'].get('form-action')
 CSP_SANDBOX = CSP_TARGETS['cms'].get('sandbox')
 CSP_REPORT_URI = CSP_TARGETS['cms'].get('report-uri')
 
-RAVEN_CONFIG = {
-    'dsn': 'https://27d84714ae7f427dab790afdf36e7fa3:e31bf59f582a4ab098b2a5aa72a6402d@log.owello.nl/11',
-    # If you are using git, you can also automatically configure the
-    # release based on the git info.
-    'release': raven.fetch_git_sha(os.path.abspath(os.curdir)),
-}
+
