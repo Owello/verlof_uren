@@ -30,8 +30,7 @@
             <tr>
                 <th>ID</th>
                 <th>Gebruikersnaam</th>
-                <th>Voornaam</th>
-                <th>Achternaam</th>
+                <th>Naam</th>
                 <th>Jaar</th>
                 <th>Verlofsaldo</th>
                 <th>Opgenomen uren</th>
@@ -43,8 +42,7 @@
                     <tr>
                         <td> {{ entitlement.user.id}}</td>
                         <td> {{ entitlement.user.username}}</td>
-                        <td> {{ entitlement.user.first_name }}</td>
-                        <td> {{ entitlement.user.last_name }}</td>
+                        <td> {{ entitlement.user.get_full_name }}</td>
                         <td> {{ entitlement.year }}</td>
                         <td> {{ entitlement.leave_hours }}</td>
                         <td> {{ entitlement.get_used_hours }}</td>

@@ -24,7 +24,7 @@
             <img class="logo" src="{% static 'Yellenge_logo_no_gradient.svg' %}" alt=""/>
         </a>
         {% if user.is_authenticated %}
-            <div class="header item">Welkom {{ request.user.username }}</div>
+             <div class="header item">Welkom {{ request.user.username }}</div>
             <a class="item" href="{% url 'index' %}">
                 <i class="home icon"></i>Welkom
             </a>
@@ -52,8 +52,9 @@
     {% block menu %}
         {% if user.is_authenticated and default_entitlement %}
             {% if perms.auth.change_user %}
+                <div class="ui centered header">Admin Menu</div>
                 <div class="ui three item menu">
-                    <a class="item" href="{% url 'admin-users-entitlement-list' year=default_entitlement.year %}">Admin</a>
+                    <a class="item" href="{% url 'admin-users-entitlement-list' year=default_entitlement.year %}">Verlofsaldo</a>
                     <a class="item" href="{% url 'user-list' %}">Gebruikers</a>
                     <a class="item" href=/admin>Django Admin</a>
                 </div>

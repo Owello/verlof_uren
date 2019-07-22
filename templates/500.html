@@ -7,7 +7,19 @@
 
 {% block content %}
     <h1>Interne server error</h1>
-    <p>Er is iets misgegaan met de datainvoer. Vraag om hulp bij Yvonne of Bob </p>
+    <p>Er is iets misgegaan op de server. Vraag om hulp bij Yvonne</p>
+{#    Functionality from CMS#}
+{#    #}
+{#    {% if request.sentry.id %}#}
+{#        <div class="ui padded grid">#}
+{#            <div class="column">#}
+{#                {% "Geef onderstaande error code door:" %}#}
+{#                <div class="ui compact message">#}
+{#                    <div class="header">{{ request.sentry.id }}</div>#}
+{#                </div>#}
+{#            </div>#}
+{#        </div>#}
+{#    {% endif %}#}
     <p>Excuses voor het ongemak</p>
 
 {% endblock content %}

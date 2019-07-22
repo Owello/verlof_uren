@@ -184,24 +184,24 @@ except ImportError as e:
 
 
 CSP_TARGETS = {
-    'cms': csp(['default', 'unsafe', 'semantic', 'log', 'googleFonts']),
+    'absence': csp(['default', 'unsafe', 'semantic', 'log', 'googleFonts']),
 }
 
-CSP_DEFAULT_SRC = CSP_TARGETS['cms'].get('default-src')
-CSP_SCRIPT_SRC = CSP_TARGETS['cms'].get('script-src')
-CSP_IMG_SRC = CSP_TARGETS['cms'].get('img-src')
-CSP_OBJECT_SRC = CSP_TARGETS['cms'].get('object-src')
-CSP_MEDIA_SRC = CSP_TARGETS['cms'].get('media-src')
-CSP_PREFETCH_SRC = CSP_TARGETS['cms'].get('prefetch-src')
-CSP_FRAME_SRC = CSP_TARGETS['cms'].get('frame-src')
-CSP_FONT_SRC = CSP_TARGETS['cms'].get('font-src')
-CSP_CONNECT_SRC = CSP_TARGETS['cms'].get('connect-src')
-CSP_STYLE_SRC = CSP_TARGETS['cms'].get('style-src')
-CSP_BASE_URI = CSP_TARGETS['cms'].get('base-uri')
-CSP_CHILD_SRC = CSP_TARGETS['cms'].get('child-src')
-CSP_FRAME_ANCESTORS = CSP_TARGETS['cms'].get('frame-ancestors')
-CSP_FORM_ACTION = CSP_TARGETS['cms'].get('form-action')
-CSP_SANDBOX = CSP_TARGETS['cms'].get('sandbox')
-CSP_REPORT_URI = CSP_TARGETS['cms'].get('report-uri')
+CSP_DEFAULT_SRC = CSP_TARGETS['absence'].get('default-src')
+CSP_SCRIPT_SRC = CSP_TARGETS['absence'].get('script-src')
+CSP_IMG_SRC = CSP_TARGETS['absence'].get('img-src')
+CSP_OBJECT_SRC = CSP_TARGETS['absence'].get('object-src')
+CSP_MEDIA_SRC = CSP_TARGETS['absence'].get('media-src')
+CSP_PREFETCH_SRC = CSP_TARGETS['absence'].get('prefetch-src')
+CSP_FRAME_SRC = CSP_TARGETS['absence'].get('frame-src')
+CSP_FONT_SRC = CSP_TARGETS['absence'].get('font-src')
+CSP_CONNECT_SRC = CSP_TARGETS['absence'].get('connect-src')
+CSP_STYLE_SRC = CSP_TARGETS['absence'].get('style-src')
+CSP_BASE_URI = CSP_TARGETS['absence'].get('base-uri')
+CSP_CHILD_SRC = CSP_TARGETS['absence'].get('child-src')
+CSP_FRAME_ANCESTORS = CSP_TARGETS['absence'].get('frame-ancestors')
+CSP_FORM_ACTION = CSP_TARGETS['absence'].get('form-action')
+CSP_SANDBOX = CSP_TARGETS['absence'].get('sandbox')
+CSP_REPORT_URI = CSP_TARGETS['absence'].get('report-uri')
 
 
