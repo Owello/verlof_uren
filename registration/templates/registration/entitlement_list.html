@@ -23,7 +23,7 @@
                 <td>{{ entitlement.year }}</td>
                 <td>{{ entitlement.leave_hours }}</td>
                 <td>{{ entitlement.get_used_hours }}</td>
-                <td>{{ entitlement.get_remainder_hours }}</td>
+                <td><a class="ui {{ entitlement.get_color }} large label">{{ entitlement.get_remainder_hours }}</a></td>
             </tr>
         {% endfor %}
         </tbody>
